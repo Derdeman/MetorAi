@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EduFund - Mobil Uyumlu Mikro Fonlama & EduAI</title>
+    <title>EduFund - Mobil Uyumlu Mikro Fonlama & Menor AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -31,6 +31,30 @@
             color: var(--dark);
             line-height: 1.5;
             font-size: 14px;
+        }
+
+        /* KAYAN REKLAM ALANI */
+        .reklam-bandi {
+            background: #1e1b4b;
+            color: #f43f5e;
+            padding: 6px 0;
+            font-size: 12px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            border-bottom: 2px solid #f43f5e;
+        }
+
+        .reklam-icerik {
+            display: inline-block;
+            padding-left: 100%;
+            animation: kayanYazi 25s linear infinite;
+        }
+
+        @keyframes kayanYazi {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
         }
 
         header {
@@ -207,9 +231,47 @@
         .progress-fill { background: var(--success); height: 100%; width: 0%; transition: width 0.5s ease-in-out; }
 
         .token-display { color: var(--warning); font-weight: bold; }
+
+        /* SANDIK VE MAĞAZA TASARIMI */
+        .magaza-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .sandik-kart {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+        .sandik-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .sandik-listesi {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .sahip-sandik {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #166534;
+        }
     </style>
 </head>
 <body>
+
+    <div class="reklam-bandi" id="reklamBandi">
+        <div class="reklam-icerik" id="reklamMetni">🚀 EduFund Platformuna Hoş Geldiniz! • Menor Coin ile Reklam Alanı Satın Alabilirsiniz! • Girişimlerinizi Dünyaya Duyurun!</div>
+    </div>
 
     <header id="navbar" style="display: none;">
         <div class="container nav-container">
@@ -223,12 +285,12 @@
             
             <div class="nav-tabs">
                 <button class="tab-btn active" id="btn-projectsTab" onclick="switchTab('projectsTab')">Projeler</button>
-                <button class="tab-btn ai-special" id="btn-aiTab" onclick="switchTab('aiTab')">✨ EduAI Danışman</button>
+                <button class="tab-btn ai-special" id="btn-aiTab" onclick="switchTab('aiTab')">✨ Menor AI Danışman</button>
                 <button class="tab-btn" id="btn-investorsTab" onclick="switchTab('investorsTab')">Yatırımcılar</button>
             </div>
 
             <div class="nav-info">
-                <span class="token-display">🪙 <span id="userTokens">0</span> EduCoin</span>
+                <span class="token-display">🪙 <span id="userTokens">0</span> Menor Coin</span>
                 <span id="navUsername" style="font-weight:600; font-size:12px;">Kullanıcı</span>
             </div>
         </div>
@@ -285,15 +347,15 @@
 
         <div id="aiTab" class="screen">
             <div class="card" style="border: 1px solid #ddd6fe; background: linear-gradient(to bottom, #f5f3ff, #ffffff);">
-                <h3 style="color:var(--ai-accent); margin-bottom:10px;">✨ EduAI Danışman</h3>
+                <h3 style="color:var(--ai-accent); margin-bottom:10px;">✨ Menor AI Danışman</h3>
                 <p style="font-size:12px; color:var(--gray); margin-bottom:15px;">
-                    Yapar zeka ile projenin başarı şansını ölç veya yatırım tavsiyesi al.
+                    Yapay zeka ile projenin başarı şansını ölç veya yatırım tavsiyesi al.
                 </p>
 
                 <div class="ai-chat-box">
                     <div class="ai-status">Analiz Motoru Aktif</div>
                     <div id="aiResponse" class="ai-message">
-                        Merhaba! Ben EduAI. Senin için ne yapabilirim? <br><br>
+                        Merhaba! Ben Menor AI. Senin için ne yapabilirim? <br><br>
                         - "Projemin başarı puanını ölç" <br>
                         - "Bu hafta hangi proje daha kârlı?" <br>
                         - "Yatırım risklerimi analiz et"
@@ -303,6 +365,48 @@
                 <div class="ai-input-group">
                     <input type="text" id="aiInput" class="ai-input" placeholder="Bir soru sorun...">
                     <button class="btn btn-ai" style="width:auto; padding:0 20px;" onclick="askAI()">Sor</button>
+                </div>
+            </div>
+
+            <div class="card" style="border: 1px solid #f43f5e; background: #fff5f5;">
+                <h3 style="color:#e11d48; margin-bottom:5px;">📢 Kayan Reklam Satın Al</h3>
+                <p style="font-size:12px; color:var(--gray); margin-bottom:12px;">Üstteki kayan reklam alanında kendi mesajınızı yayınlayın.</p>
+                <div class="form-group" style="margin-bottom:10px;">
+                    <input type="text" id="reklamGiris" placeholder="Reklam mesajınızı yazın... (Maliyet: 100 Menor Coin)">
+                </div>
+                <button class="btn" style="background:#e11d48; padding:10px;" onclick="reklamSatinAl()">Reklamı Yayınla (100 Coin)</button>
+            </div>
+
+            <div class="card">
+                <h3>🪙 Menor Coin Mağazası (Sandıklar)</h3>
+                <p style="font-size:12px; color:var(--gray);">Kazandığınız Menor Coin'leri harcayarak sandık koleksiyonu yapın.</p>
+                
+                <div class="magaza-grid">
+                    <div class="sandik-kart">
+                        <div class="sandik-icon">📦</div>
+                        <strong>Bronz Sandık</strong>
+                        <div style="font-size:11px; color:var(--warning); font-weight:bold; margin:5px 0;">50 Coin</div>
+                        <button class="btn" style="padding:5px; font-size:11px;" onclick="sandikSatinAl('Bronz Sandık', 50, '📦')">Satın Al</button>
+                    </div>
+                    <div class="sandik-kart">
+                        <div class="sandik-icon">🧰</div>
+                        <strong>Gümüş Sandık</strong>
+                        <div style="font-size:11px; color:var(--warning); font-weight:bold; margin:5px 0;">150 Coin</div>
+                        <button class="btn" style="padding:5px; font-size:11px;" onclick="sandikSatinAl('Gümüş Sandık', 150, '🧰')">Satın Al</button>
+                    </div>
+                    <div class="sandik-kart">
+                        <div class="sandik-icon">👑</div>
+                        <strong>Altın Sandık</strong>
+                        <div style="font-size:11px; color:var(--warning); font-weight:bold; margin:5px 0;">300 Coin</div>
+                        <button class="btn" style="padding:5px; font-size:11px;" onclick="sandikSatinAl('Altın Sandık', 300, '👑')">Satın Al</button>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;">
+                    <h4>🎒 Satın Alınan Sandıklar (Envanter)</h4>
+                    <div id="sandikKutusu" class="sandik-listesi">
+                        <span style="color:var(--gray); font-size:12px;">Henüz satın alınmış sandık yok.</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -316,7 +420,6 @@
 
     </div>
 
-    <!-- PROJE EKLEME MODALI -->
     <div id="addProjModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; padding:20px;">
         <div class="card" style="width:100%; max-width:400px; margin:auto;">
             <h3 style="margin-bottom:15px;">Yeni Proje Ekle</h3>
@@ -337,14 +440,18 @@
 
     <script>
         let db = JSON.parse(localStorage.getItem('eduDB')) || [
-            { name: "Arda Berk", email: "arda@test.com", password: "123", role: "student", tokens: 100 },
-            { name: "KOU Teknopark", email: "admin@test.com", password: "123", role: "donor", tokens: 5000, totalDonated: 12500 }
+            { name: "Arda Berk", email: "arda@test.com", password: "123", role: "student", tokens: 100, sandiklar: [] },
+            { name: "KOU Teknopark", email: "admin@test.com", password: "123", role: "donor", tokens: 5000, totalDonated: 12500, sandiklar: [] }
         ];
 
         let projects = JSON.parse(localStorage.getItem('eduProjects')) || [
             { id: 1, title: "Akıllı Tarım Robotu", student: "Arda Berk", goal: 50000, current: 12500, cat: "Robotik" },
             { id: 2, title: "Geri Dönüşüm Takip", student: "Merve Y.", goal: 15000, current: 8000, cat: "Yazılım" }
         ];
+
+        // Yerel hafızadaki güncel reklam metnini yükle
+        let aktifReklam = localStorage.getItem('menorReklam') || "🚀 EduFund Platformuna Hoş Geldiniz! • Menor Coin ile Reklam Alanı Satın Alabilirsiniz! • Girişimlerinizi Dünyaya Duyurun!";
+        document.getElementById('reklamMetni').innerText = aktifReklam;
 
         let activeUser = null;
 
@@ -367,6 +474,7 @@
 
             if(user) {
                 activeUser = user;
+                if(!activeUser.sandiklar) activeUser.sandiklar = [];
                 loginSuccess();
             } else { alert("Hatalı giriş!"); }
         }
@@ -378,7 +486,7 @@
             
             if(!n || !e) return alert("Alanları doldurun!");
             
-            const newUser = { name: n, email: e, password: "123", role: r, tokens: 0, totalDonated: 0 };
+            const newUser = { name: n, email: e, password: "123", role: r, tokens: 0, totalDonated: 0, sandiklar: [] };
             db.push(newUser);
             localStorage.setItem('eduDB', JSON.stringify(db));
             activeUser = newUser;
@@ -399,6 +507,7 @@
             switchTab('projectsTab');
             renderProjects();
             renderInvestors();
+            renderSandiklar();
         }
 
         function logout() { location.reload(); }
@@ -458,7 +567,7 @@
             document.getElementById('userTokens').innerText = activeUser.tokens;
             renderProjects();
             renderInvestors();
-            alert("Destek sağlandı! +50 EduCoin kazandınız.");
+            alert("Destek sağlandı! +50 Menor Coin kazandınız.");
         }
 
         function openAddProjectModal() {
@@ -506,7 +615,7 @@
                 } else if(input.includes("risk")) {
                     responseDiv.innerHTML = "⚠️ <strong>Risk Raporu:</strong> Şu anki ekonomik göstergelerde sosyal sorumluluk projeleri yavaş fonlanmaktadır. En düşük finansal risk oranına sahip kategori: <strong>Yazılım / Uygulama Geliştirme</strong>.";
                 } else {
-                    responseDiv.innerHTML = "🤖 <strong>EduAI:</strong> Sorduğun soruyu geniş veri havuzumda taradım. Projelerin başarılı olması için iş planı dokümanlarını eksiksiz yüklemelerini öneririm. En çok fonlanan kategori şu an: <strong>Robotik</strong>.";
+                    responseDiv.innerHTML = "🤖 <strong>Menor AI:</strong> Sorduğun soruyu geniş veri havuzumda taradım. Projelerin başarılı olması için iş planı dokümanlarını eksiksiz yüklemelerini öneririm. En çok fonlanan kategori şu an: <strong>Robotik</strong>.";
                 }
                 document.getElementById('aiInput').value = "";
             }, 1200);
@@ -514,6 +623,67 @@
 
         function openSwitchModal() {
             alert("Hızlı Hesap Değiştirme Sistemi:\nÇıkış yapıp Giriş ekranındaki hazır test hesap bilgileriyle (Öğrenci veya Yatırımcı) anında rolleri değiştirebilirsiniz.");
+        }
+
+        /* YENİ EKLENEN ENVENTER/SANDIK FONKSİYONLARI */
+        function sandikSatinAl(sandikAdi, maliyet, icon) {
+            if(activeUser.tokens < maliyet) {
+                return alert("Yetersiz Menor Coin! Projelere fon sağlayarak coin kazanabilirsiniz.");
+            }
+
+            activeUser.tokens -= maliyet;
+            activeUser.sandiklar.push({ isim: sandikAdi, simge: icon });
+
+            // Veritabanını güncelle
+            let userInDb = db.find(u => u.email === activeUser.email);
+            userInDb.tokens = activeUser.tokens;
+            userInDb.sandiklar = activeUser.sandiklar;
+
+            localStorage.setItem('eduDB', JSON.stringify(db));
+            document.getElementById('userTokens').innerText = activeUser.tokens;
+            
+            renderSandiklar();
+            alert(`${sandikAdi} başarıyla satın alındı ve sandıklarınıza gönderildi!`);
+        }
+
+        function renderSandiklar() {
+            const kutu = document.getElementById('sandikKutusu');
+            kutu.innerHTML = '';
+
+            if(!activeUser.sandiklar || activeUser.sandiklar.length === 0) {
+                kutu.innerHTML = '<span style="color:var(--gray); font-size:12px;">Henüz satın alınmış sandık yok.</span>';
+                return;
+            }
+
+            activeUser.sandiklar.forEach(s => {
+                kutu.innerHTML += `<div class="sahip-sandik">${s.simge} ${s.isim}</div>`;
+            });
+        }
+
+        /* YENİ EKLENEN REKLAM SATIN ALMA FONKSİYONU */
+        function reklamSatinAl() {
+            const metin = document.getElementById('reklamGiris').value.trim();
+            if(!metin) return alert("Lütfen bir reklam metni girin!");
+
+            if(activeUser.tokens < 100) {
+                return alert("Reklam vermek için 100 Menor Coin gerekir. Yetersiz bakiye!");
+            }
+
+            activeUser.tokens -= 100;
+            
+            let userInDb = db.find(u => u.email === activeUser.email);
+            userInDb.tokens = activeUser.tokens;
+
+            // Kayan yazıyı güncelle ve yerel hafızaya yaz
+            aktifReklam = `📢 [REKLAM] ${activeUser.name}: ${metin} • ` + aktifReklam;
+            localStorage.setItem('menorReklam', aktifReklam);
+            document.getElementById('reklamMetni').innerText = aktifReklam;
+            
+            localStorage.setItem('eduDB', JSON.stringify(db));
+            document.getElementById('userTokens').innerText = activeUser.tokens;
+            document.getElementById('reklamGiris').value = '';
+
+            alert("Reklamınız başarıyla satın alındı ve kayan yazıya eklendi!");
         }
     </script>
 </body>
