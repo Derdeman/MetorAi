@@ -63,6 +63,7 @@
             font-size: 20px;
             font-weight: 800;
             color: var(--primary);
+            cursor: pointer;
         }
 
         .header-actions {
@@ -208,16 +209,15 @@
             border-radius: 10px;
             font-size: 15px;
             background: #f8fafc;
-            -webkit-appearance: none;
         }
 
-        /* Beni Hatırla Düzeni */
         .remember-me-container {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 16px;
         }
+
         .remember-me-container input[type="checkbox"] {
             width: 18px;
             height: 18px;
@@ -236,6 +236,10 @@
             width: 100%;
             text-align: center;
             transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
         }
 
         .btn-donate {
@@ -367,7 +371,6 @@
             font-size: 12px;
         }
 
-        /* Hesap Değiştirme Modalı Modeli */
         .account-item {
             display: flex;
             align-items: center;
@@ -379,14 +382,15 @@
             margin-bottom: 8px;
             cursor: pointer;
         }
+
         .account-item:hover {
             border-color: var(--primary);
             background: #f0fdf4;
         }
 
         .market-grid {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 12px;
             margin-top: 12px;
         }
@@ -394,9 +398,22 @@
         .market-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 12px;
+            padding: 16px;
             border-radius: 12px;
             text-align: center;
+        }
+
+        .market-title {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .market-price {
+            color: var(--warning);
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 10px;
         }
 
         .about-header {
@@ -440,12 +457,12 @@
         .coupon-box {
             background: #eff6ff;
             border: 1px dashed var(--primary);
-            padding: 6px;
+            padding: 8px;
             border-radius: 6px;
             font-family: monospace;
             font-weight: bold;
             color: var(--primary);
-            margin-top: 6px;
+            margin-top: 8px;
             font-size: 13px;
         }
     </style>
@@ -641,7 +658,7 @@
             </div>
         </div>
 
-        <div id="projectModal" class="screen" style="background: rgba(0,0,0,0.6); position: fixed; top:0; left:0; width:100%; height:100%; z-index:1000; justify-content: center; align-items: center; padding:20px;">
+        <div id="projectModal" style="display: none; background: rgba(0,0,0,0.6); position: fixed; top:0; left:0; width:100%; height:100%; z-index:1000; justify-content: center; align-items: center; padding:20px;">
             <div class="auth-card" style="margin: auto;">
                 <h2 style="font-size:18px;">Yeni Proje Başvurusu</h2>
                 <form onsubmit="handleNewProjectSubmit(event)">
@@ -671,11 +688,10 @@
             </div>
         </div>
 
-        <div id="switchAccountModal" class="screen" style="background: rgba(0,0,0,0.6); position: fixed; top:0; left:0; width:100%; height:100%; z-index:1000; justify-content: center; align-items: center; padding:20px;">
+        <div id="switchAccountModal" style="display: none; background: rgba(0,0,0,0.6); position: fixed; top:0; left:0; width:100%; height:100%; z-index:1000; justify-content: center; align-items: center; padding:20px;">
             <div class="auth-card" style="margin: auto;">
                 <h2 style="font-size:18px; margin-bottom:12px;">Hesaplar Arası Hızlı Geçiş</h2>
-                <div id="accountListContainer" style="max-height: 250px; overflow-y: auto; margin-bottom: 12px;">
-                    </div>
+                <div id="accountListContainer" style="max-height: 250px; overflow-y: auto; margin-bottom: 12px;"></div>
                 <button type="button" class="btn btn-secondary" onclick="closeSwitchAccountModal()">İptal</button>
             </div>
         </div>
@@ -688,7 +704,6 @@
         let userTokens = 0;
         let activeSessionUser = null;
 
-        // Varsayılan Veritabanı ve Şifre Tanımlamaları
         if(!localStorage.getItem('eduMobileUserDB')) {
             localStorage.setItem('eduMobileUserDB', JSON.stringify([
                 { name: "Ahmet Yılmaz", email: "ahmet@kou.com", password: "123", role: "donor", company: "KOU Teknopark", avatar: "💼", totalDonated: 1500, hasBadge: true },
@@ -701,7 +716,6 @@
             { id: 2, title: "Dijital Kütüphane Uygulaması", category: "Yazılım", student: "Ece Deren", info: "İzmit Fen Lisesi", current: 8000, goal: 15000 }
         ];
 
-        // SAYFA YÜKLENDİĞİNDE BENİ HATIRLA KONTROLÜ
         window.onload = function() {
             let rememberedEmail = localStorage.getItem('rememberedUserEmail');
             if(rememberedEmail) {
@@ -860,23 +874,45 @@
             const password = document.getElementById('regPassword').value;
             const role = document.getElementById('regRole').value;
 
-            if(inputCode !== currentGeneratedCode) { alert("Hatalı kod!"); return; }
+            if (inputCode !== currentGeneratedCode || currentGeneratedCode === "") {
+                alert("Hatalı veya eksik onay kodu!");
+                return;
+            }
 
-            let db = JSON.parse(localStorage.getItem('eduMobileUserDB'));
-            if(db.find(u => u.email === email)) { alert("Bu e-posta kayıtlı!"); return; }
-
-            let extraInfo = role === 'student' ? (document.getElementById('regSchool').value || "Kocaeli Lisesi") : (document.getElementById('regCompany').value || "Bireysel");
+            let db = JSON.parse(localStorage.getItem('eduMobileUserDB')) || [];
+            if (db.some(u => u.email === email)) {
+                alert("Bu e-posta adresi zaten kayıtlı!");
+                return;
+            }
 
             let newUser = {
-                name: name, email: email, password: password, role: role, company: extraInfo, avatar: '🧑‍💻', totalDonated: 0, hasBadge: false
+                name: name,
+                email: email,
+                password: password,
+                role: role,
+                avatar: "🧑‍💻",
+                totalDonated: 0,
+                hasBadge: false
             };
+
+            if (role === 'student') {
+                newUser.school = document.getElementById('regSchool').value.trim() || 'Belirtilmedi';
+                newUser.grade = document.getElementById('regGrade').value;
+            } else {
+                newUser.company = document.getElementById('regCompany').value.trim() || 'Bireysel';
+            }
 
             db.push(newUser);
             localStorage.setItem('eduMobileUserDB', JSON.stringify(db));
-            activeSessionUser = newUser;
 
-            document.getElementById('authScreen').classList.remove('active');
-            document.getElementById('avatarScreen').classList.add('active');
+            activeSessionUser = newUser;
+            
+            document.getElementById('registerForm').reset();
+            document.getElementById('verifyBox').style.display = 'none';
+            document.getElementById('btnSendCode').style.display = 'block';
+            currentGeneratedCode = "";
+
+            switchScreen('avatarScreen');
         }
 
         function handleLogin(event) {
@@ -885,74 +921,82 @@
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('loginRememberMe').checked;
 
-            let db = JSON.parse(localStorage.getItem('eduMobileUserDB'));
+            let db = JSON.parse(localStorage.getItem('eduMobileUserDB')) || [];
             let user = db.find(u => u.email === email && u.password === password);
 
-            if(user) { 
-                activeSessionUser = user; 
-                // BENI HATIRLA AYARI
-                if(rememberMe) {
-                    localStorage.setItem('rememberedUserEmail', user.email);
+            if (user) {
+                activeSessionUser = user;
+                if (rememberMe) {
+                    localStorage.setItem('rememberedUserEmail', email);
                 } else {
                     localStorage.removeItem('rememberedUserEmail');
                 }
-                loginSuccess(); 
-            } else { 
-                alert("Hatalı bilgiler!"); 
+                loginSuccess();
+            } else {
+                alert("E-posta veya şifre hatalı!");
             }
         }
 
-        // HESAP DEĞİŞTİRME MODAL İŞLEMLERİ
-        function openSwitchAccountModal() {
-            document.getElementById('switchAccountModal').style.display = 'flex';
-            const container = document.getElementById('accountListContainer');
-            container.innerHTML = '';
+        function loginSuccess() {
+            document.getElementById('navUsername').innerText = activeSessionUser.name;
+            document.getElementById('navAvatar').innerText = activeSessionUser.avatar || "🧑‍💻";
+            
+            const addProjectBtn = document.getElementById('addProjectBtn');
+            if (activeSessionUser.role === 'student') {
+                if (addProjectBtn) addProjectBtn.style.display = 'block';
+            } else {
+                if (addProjectBtn) addProjectBtn.style.display = 'none';
+            }
 
-            let db = JSON.parse(localStorage.getItem('eduMobileUserDB'));
-            db.forEach(user => {
-                // Şu an aktif olan hesabı listede belirtelim ama tıklanabilir yapmayalım veya farklı gösterelim
-                const isCurrent = activeSessionUser && user.email === activeSessionUser.email;
-                const div = document.createElement('div');
-                div.className = 'account-item';
-                div.style.opacity = isCurrent ? '0.6' : '1';
-                div.style.border = isCurrent ? '2px solid var(--primary)' : '1px solid #e2e8f0';
-                
-                div.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:20px;">${user.avatar || '🧑‍💻'}</span>
-                        <div style="text-align:left;">
-                            <div style="font-weight:bold; font-size:13px;">${user.name} ${isCurrent ? '(Aktif)' : ''}</div>
-                            <div style="font-size:11px; color:var(--gray);">${user.email}</div>
-                        </div>
-                    </div>
-                    <span style="font-size:11px; font-weight:bold; color:var(--primary);">${user.role === 'student' ? 'Girişimci' : 'Yatırımcı'}</span>
-                `;
+            document.getElementById('userTokens').innerText = userTokens;
+            updateHeaderBadge();
 
-                if(!isCurrent) {
-                    div.onclick = function() {
-                        quickSwitchUser(user.email);
-                    };
-                }
-                container.appendChild(div);
-            });
+            document.getElementById('authScreen').classList.remove('active');
+            document.getElementById('avatarScreen').classList.remove('active');
+            document.getElementById('navbar').style.display = 'block';
+            
+            renderProjects();
+            renderInvestors();
+            
+            switchTab('projectsTab');
         }
 
-        function closeSwitchAccountModal() {
-            document.getElementById('switchAccountModal').style.display = 'none';
+        function logout() {
+            activeSessionUser = null;
+            localStorage.removeItem('rememberedUserEmail');
+            document.getElementById('navbar').style.display = 'none';
+            
+            document.querySelectorAll('.container > .screen').forEach(scr => scr.classList.remove('active'));
+            document.getElementById('authScreen').classList.add('active');
+            switchAuthMode(false);
         }
 
-        function quickSwitchUser(email) {
-            let db = JSON.parse(localStorage.getItem('eduMobileUserDB'));
-            let user = db.find(u => u.email === email);
-            if(user) {
-                activeSessionUser = user;
-                // Eğer beni hatırla aktifse yeni seçilen e-postayı güncelle
-                if(localStorage.getItem('rememberedUserEmail')) {
-                    localStorage.setItem('rememberedUserEmail', user.email);
-                }
-                closeSwitchAccountModal();
-                loginSuccess();
-                alert(`${user.name} hesabına başarıyla geçiş yapıldı.`);
+        function switchScreen(screenId) {
+            document.querySelectorAll('.container > .screen').forEach(scr => scr.classList.remove('active'));
+            const target = document.getElementById(screenId);
+            if (target) target.classList.add('active');
+        }
+
+        function switchAuthMode(toRegister) {
+            if (toRegister) {
+                document.getElementById('authTitle').innerText = "EduFund'a Kayıt Ol";
+                document.getElementById('registerForm').style.display = 'block';
+                document.getElementById('loginForm').style.display = 'none';
+            } else {
+                document.getElementById('authTitle').innerText = "EduFund'a Giriş Yap";
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+            }
+        }
+
+        function toggleRegFields() {
+            const role = document.getElementById('regRole').value;
+            if (role === 'student') {
+                document.getElementById('studentFields').style.display = 'block';
+                document.getElementById('donorFields').style.display = 'none';
+            } else {
+                document.getElementById('studentFields').style.display = 'none';
+                document.getElementById('donorFields').style.display = 'block';
             }
         }
 
@@ -963,71 +1007,89 @@
         }
 
         function saveAvatarSelection() {
-            if(activeSessionUser) {
-                activeSessionUser.avatar = selectedEmoji;
-                let db = JSON.parse(localStorage.getItem('eduMobileUserDB'));
+            if (activeSessionUser) {
+                let db = JSON.parse(localStorage.getItem('eduMobileUserDB')) || [];
                 let idx = db.findIndex(u => u.email === activeSessionUser.email);
-                if(idx !== -1) { db[idx].avatar = selectedEmoji; localStorage.setItem('eduMobileUserDB', JSON.stringify(db)); }
+                if (idx !== -1) {
+                    db[idx].avatar = selectedEmoji;
+                    localStorage.setItem('eduMobileUserDB', JSON.stringify(db));
+                    activeSessionUser = db[idx];
+                }
+                loginSuccess();
             }
-            loginSuccess();
         }
 
-        function loginSuccess() {
-            document.getElementById('avatarScreen').classList.remove('active');
-            document.getElementById('authScreen').classList.remove('active');
-            document.getElementById('navbar').style.display = 'block';
-            document.getElementById('navUsername').innerText = activeSessionUser.name;
-            document.getElementById('navAvatar').innerText = activeSessionUser.avatar || '🧑‍💻';
-            document.getElementById('userTokens').innerText = userTokens;
-            switchTab('projectsTab');
-            renderProjects();
-            renderInvestors();
-            updateHeaderBadge();
+        function openProjectModal() {
+            document.getElementById('projectModal').style.display = 'flex';
         }
 
-        function logout() {
-            activeSessionUser = null;
-            localStorage.removeItem('rememberedUserEmail'); // Çıkış yapınca otomatik hatırlamayı kaldırır
-            document.getElementById('projectsTab').classList.remove('active');
-            document.getElementById('investorsTab').classList.remove('active');
-            document.getElementById('aboutTab').classList.remove('active');
-            document.getElementById('navbar').style.display = 'none';
-            switchAuthMode(false); // Direkt giriş formuna yönlendirsin
-            document.getElementById('authScreen').classList.add('active');
-            document.getElementById('btnSendCode').style.display = 'block';
-            document.getElementById('verifyBox').style.display = 'none';
-            document.getElementById('loginRememberMe').checked = false;
+        function closeProjectModal() {
+            document.getElementById('projectModal').style.display = 'none';
         }
-
-        function toggleRegFields() {
-            const role = document.getElementById('regRole').value;
-            document.getElementById('studentFields').style.display = role === 'student' ? 'block' : 'none';
-            document.getElementById('donorFields').style.display = role === 'donor' ? 'block' : 'none';
-        }
-
-        function switchAuthMode(isRegister) {
-            document.getElementById('authTitle').innerText = isRegister ? "EduFund'a Kayıt Ol" : "EduFund Giriş Paneli";
-            document.getElementById('registerForm').style.display = isRegister ? "block" : "none";
-            document.getElementById('loginForm').style.display = isRegister ? "none" : "block";
-        }
-
-        function openProjectModal() { document.getElementById('projectModal').style.display = 'flex'; }
-        function closeProjectModal() { document.getElementById('projectModal').style.display = 'none'; }
 
         function handleNewProjectSubmit(event) {
             event.preventDefault();
-            projects.unshift({
+            const title = document.getElementById('newProjTitle').value.trim();
+            const desc = document.getElementById('newProjDesc').value.trim();
+            const goal = parseInt(document.getElementById('newProjGoal').value);
+            const category = document.getElementById('newProjCategory').value;
+
+            const newProj = {
                 id: projects.length + 1,
-                title: document.getElementById('newProjTitle').value,
-                category: document.getElementById('newProjCategory').value,
-                student: activeSessionUser.name,
-                info: activeSessionUser.company || 'Lise Öğrencisi',
+                title: title,
+                category: category,
+                student: activeSessionUser ? activeSessionUser.name : "Gizli Öğrenci",
+                info: activeSessionUser && activeSessionUser.school ? activeSessionUser.school : "Lise Belirtilmedi",
                 current: 0,
-                goal: Number(document.getElementById('newProjGoal').value)
-            });
+                goal: goal
+            };
+
+            projects.unshift(newProj);
             renderProjects();
             closeProjectModal();
-            alert("Projeniz başarıyla yayına alındı.");
+            
+            document.getElementById('newProjTitle').value = '';
+            document.getElementById('newProjDesc').value = '';
+            document.getElementById('newProjGoal').value = '';
+            
+            alert("Projeniz başarıyla yayınlandı!");
+        }
+
+        function openSwitchAccountModal() {
+            const container = document.getElementById('accountListContainer');
+            container.innerHTML = '';
+            let db = JSON.parse(localStorage.getItem('eduMobileUserDB')) || [];
+
+            if (db.length === 0) {
+                container.innerHTML = '<p style="font-size:12px; color:var(--gray);">Kayıtlı hesap bulunamadı.</p>';
+            } else {
+                db.forEach(user => {
+                    const item = document.createElement('div');
+                    item.className = 'account-item';
+                    const isCurrent = activeSessionUser && activeSessionUser.email === user.email ? ' (Aktif)' : '';
+                    item.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span>${user.avatar || '🧑‍💻'}</span>
+                            <div>
+                                <div style="font-weight:bold; font-size:13px;">${user.name}${isCurrent}</div>
+                                <div style="font-size:11px; color:var(--gray);">${user.role === 'student' ? 'Öğrenci' : 'Yatırımcı'}</div>
+                            </div>
+                        </div>
+                        <span style="font-size:11px; color:var(--primary); font-weight:bold;">Seç</span>
+                    `;
+                    item.onclick = function() {
+                        activeSessionUser = user;
+                        loginSuccess();
+                        closeSwitchAccountModal();
+                    };
+                    container.appendChild(item);
+                });
+            }
+            document.getElementById('switchAccountModal').style.display = 'flex';
+        }
+
+        function closeSwitchAccountModal() {
+            document.getElementById('switchAccountModal').style.display = 'none';
         }
     </script>
 </body>
