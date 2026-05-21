@@ -19,6 +19,7 @@
             --github: #24292e;
             --discord: #5865F2;
             --openai: #10a37f;
+            --chest-bg: #ffeaa7;
         }
 
         * {
@@ -258,47 +259,74 @@
         .btn-openai { background-color: var(--openai) !important; }
         .btn-openai:hover { background-color: #0d8567 !important; }
 
-        /* 📦 SANDIK & ENVANTER ALANI */
-        .sandik-panel {
-            margin-top: 25px;
-            background: #eccc68;
-            border: 2px dashed #ffa502;
-            border-radius: 12px;
-            padding: 20px;
+        /* 📦 ÖZEL VE AYRI ENVANTER BÖLÜMÜ */
+        .ozel-envanter-section {
+            margin-top: 30px;
+            background: #ffffff;
+            border: 2px solid #dfe4ea;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .envanter-grid {
+        .envanter-baslik-alani {
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .envanter-item {
-            background: white;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            border: 1px solid #ffa502;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+        }
+
+        .envanter-grid-sistemi {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 15px;
+        }
+
+        .envanter-kart {
+            background: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: 0.2s;
+        }
+
+        .envanter-kart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .envanter-kart .icon-box {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .envanter-kart h5 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .envanter-kart button {
             width: 100%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-top: 5px;
+            padding: 8px 10px;
+            font-size: 12px;
+            border-radius: 6px;
         }
 
-        .envanter-item button {
-            width: auto;
-            margin-top: 0;
-            padding: 5px 10px;
-            font-size: 11px;
-            background: var(--success);
-        }
-
-        .envanter-item .btn-open-chest {
+        .envanter-kart .btn-sandik-ac {
             background: var(--purple);
+        }
+        .envanter-kart .btn-kupon-kullan {
+            background: var(--success);
         }
 
         /* 👑 AKTİF ÜYELİKLERİN GÖZÜKTÜĞÜ ÖZEL PANEL */
@@ -415,7 +443,7 @@
 
         <div class="active-subscriptions-panel">
             <h4>⚡ Aktif Premium Üyelikleriniz</h4>
-            <p style="font-size: 11px; color:#555;">Envanterinizden aktive ettiğiniz tüm üyelikler burada listelenir.</p>
+            <p style="font-size: 11px; color:#555;">Özel Envanterinizden aktifleştirdiğiniz tüm üyelikler burada listelenir.</p>
             <div class="sub-badge-grid" id="aktif-uyelikler-alani">
                 <span style="color:#7f8c8d; font-size:12px; font-style:italic;" id="bos-uyelik-notu">Henüz aktif bir premium üyeliğiniz bulunmuyor.</span>
             </div>
@@ -445,10 +473,10 @@
                 
                 <div class="market-item" style="border: 2px dashed var(--purple);">
                     <div>
-                        <strong>🎁 Gizemli Yazılımcı Sandığı</strong>
+                        <strong>📦 Gizemli Yazılımcı Sandığı</strong>
                         <p style="font-size:11px; color:#777; font-weight:bold; color:var(--purple);">Açıldığında rastgele 1 adet Premium üyelik kuponu verir!</p>
                     </div>
-                    <button onclick="buyMarketItem('Gizemli Yazılımcı Sandığı', 50, '🎁', 'chest')">50 M-Coin</button>
+                    <button onclick="buyMarketItem('Gizemli Yazılımcı Sandığı', 50, '📦', 'chest')">50 M-Coin</button>
                 </div>
 
                 <div class="market-item">
@@ -485,11 +513,17 @@
             </div>
         </div>
 
-        <div class="sandik-panel">
-            <h3>📦 Satın Alınan Sandıklarım & Envanterim</h3>
-            <p style="font-size:12px; color:#5f27cd;">Sandıkları buradan açabilir, çıkan veya direkt aldığınız üyelik kuponlarını aktive edebilirsiniz.</p>
-            <div class="envanter-grid" id="envanter-alani">
-                <span style="color:#7f8c8d; font-size:13px; font-style:italic;" id="bos-envanter-notu">Henüz bir sandık veya ödül satın alınmadı.</span>
+        <div class="ozel-envanter-section">
+            <div class="envanter-baslik-alani">
+                <h3>💼 Kişisel Özel Envanteriniz</h3>
+                <span style="font-size: 12px; background: #dfe4ea; padding: 4px 10px; border-radius: 12px; font-weight: bold; color: #2c3e50;">Kilitli Depo Kontrolü</span>
+            </div>
+            <p style="font-size:13px; color:#57606f; margin-bottom:15px;">Satın aldığınız sandıkları buradan açabilir veya kazandığınız üyelik kuponlarını hesabınıza tanımlayabilirsiniz.</p>
+            
+            <div class="envanter-grid-sistemi" id="envanter-alani">
+                <div style="grid-column: 1 / -1; text-align: center; color:#a4b0be; padding: 20px; font-style: italic;" id="bos-envanter-notu">
+                    Envanteriniz şu anda boş. Ödül marketinden satın alım yapın!
+                </div>
             </div>
         </div>
 
@@ -572,20 +606,19 @@
         if (userData.mentorCoinBalance >= cost) {
             userData.mentorCoinBalance -= cost;
             
-            // Benzersiz bir ID ekleyerek envanter nesnesini oluşturuyoruz
             let uniqueId = Date.now() + Math.random();
             userData.envanter.push({ id: uniqueId, name: itemName, icon: emoji, type: itemType });
             
             updateDashboardUI();
             updateEnvanterUI();
             
-            alert(`🎉 Satın alım başarılı! "${itemName}" envanterinize eklendi. Aşağı kaydırarak kontrol edebilirsiniz.`);
+            alert(`🎉 Satın alım başarılı! \n"${itemName}" Özel Envanter Bölümünüze eklendi.`);
         } else {
             alert(`❌ Yetersiz Mentor Coin! Projelere bağış yaparak Mentor Coin kazanabilirsiniz.`);
         }
     }
 
-    // ENVANTER ARAYÜZÜNÜ GÜNCELLEME
+    // ÖZEL ENVANTER GÖRÜNÜMÜNÜ GÜNCELLEME
     function updateEnvanterUI() {
         const alan = document.getElementById('envanter-alani');
         
@@ -593,60 +626,63 @@
             alan.innerHTML = ""; 
             userData.envanter.forEach(item => {
                 let actionButton = "";
+                let itemLabel = "";
                 
                 if (item.type === 'chest') {
-                    actionButton = `<button class="btn-open-chest" onclick="openChest(${item.id})">Sandığı Aç 🔓</button>`;
+                    itemLabel = `<span style="color: var(--purple); font-size:11px;">[Gizemli Sandık]</span>`;
+                    actionButton = `<button class="btn-sandik-ac" onclick="openChest(${item.id})">Sandığı Aç 🔓</button>`;
                 } else if (item.type === 'coupon') {
-                    actionButton = `<button onclick="activateCoupon(${item.id})">Kuponu Kullan 🎫</button>`;
+                    itemLabel = `<span style="color: var(--success); font-size:11px;">[Kullanılabilir Kupon]</span>`;
+                    actionButton = `<button class="btn-kupon-kullan" onclick="activateCoupon(${item.id})">Kuponu Kullan 🎫</button>`;
                 }
 
                 alan.innerHTML += `
-                    <div class="envanter-item">
-                        <span>🔒 ${item.icon} <strong>${item.name}</strong></span>
+                    <div class="envanter-kart">
+                        <div class="icon-box">${item.icon}</div>
+                        <h5>${item.name}</h5>
+                        ${itemLabel}
                         ${actionButton}
                     </div>
                 `;
             });
         } else {
-            alan.innerHTML = `<span style="color:#7f8c8d; font-size:13px; font-style:italic;" id="bos-envanter-notu">Henüz bir sandık veya ödül satın alınmadı.</span>`;
+            alan.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; color:#a4b0be; padding: 20px; font-style: italic;" id="bos-envanter-notu">
+                    Envanteriniz şu anda boş. Ödül marketinden satın alım yapın!
+                </div>
+            `;
         }
     }
 
-    // 🔥 ÖZEL SANDIK AÇILIM FONKSİYONU
+    // SANDIK AÇMA FONKSİYONU
     function openChest(itemId) {
-        // İlgili sandığı envanterden bul ve kaldır
         const index = userData.envanter.findIndex(i => i.id === itemId);
         if (index !== -1) {
             userData.envanter.splice(index, 1);
             
-            // Havuzdan rastgele ödül seç (Şans çarkı mekanizması)
             const rastgeleSecim = sandikHavuzu[Math.floor(Math.random() * sandikHavuzu.length)];
             
-            // Yeni çıkan ödülü kupon olarak envantere ekle
             let uniqueId = Date.now() + Math.random();
             userData.envanter.push({ id: uniqueId, name: rastgeleSecim.name, icon: rastgeleSecim.icon, type: 'coupon' });
             
             updateEnvanterUI();
-            alert(`🎁 Sandık Açılıyor... \n\n🎉 Tebrikler! Sandıktan "${rastgeleSecim.icon} ${rastgeleSecim.name}" kuponu çıktı! Envanterinize eklendi.`);
+            alert(`🎁 Sandık Açılıyor... \n\n🎉 Tebrikler! Sandıktan "${rastgeleSecim.icon} ${rastgeleSecim.name}" kuponu çıktı! Özel envanterinizden kuponu kullanabilirsiniz.`);
         }
     }
 
-    // 🔥 KUPON KULLANMA VE ÜYELİĞİ AKTİF ETME FONKSİYONU
+    // KUPON AKTİF ETME FONKSİYONU
     function activateCoupon(itemId) {
         const index = userData.envanter.findIndex(i => i.id === itemId);
         if (index !== -1) {
             const kupon = userData.envanter[index];
-            
-            // Envanterden kaldır
             userData.envanter.splice(index, 1);
             
-            // Aktif üyelikler listesine ekle
             userData.aktifUyelikler.push({ name: kupon.name, icon: kupon.icon });
             
             updateEnvanterUI();
             updateActiveSubscriptionsUI();
             
-            alert(`⚡ Harika! "${kupon.icon} ${kupon.name}" başarıyla hesabınızda aktive edildi!`);
+            alert(`⚡ Harika! "${kupon.icon} ${kupon.name}" üyeliğiniz profilinizde aktifleştirildi.`);
         }
     }
 
