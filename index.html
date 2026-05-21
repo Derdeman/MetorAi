@@ -15,6 +15,10 @@
             --purple: #6c5ce7;
             --starbucks: #00704A;
             --netflix: #E50914;
+            --spotify: #1DB954;
+            --github: #24292e;
+            --discord: #5865F2;
+            --openai: #10a37f;
         }
 
         * {
@@ -46,7 +50,7 @@
             overflow: hidden;
             white-space: nowrap;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            display: none; /* İlk başta reklam yoksa gizli */
+            display: none;
         }
 
         .reklam-icerik {
@@ -240,11 +244,19 @@
             background: var(--purple);
         }
 
-        /* Özel Mağaza Buton Renkleri */
+        /* Mağaza Özel Renkleri */
         .btn-starbucks { background-color: var(--starbucks) !important; }
         .btn-starbucks:hover { background-color: #004d34 !important; }
         .btn-netflix { background-color: var(--netflix) !important; }
         .btn-netflix:hover { background-color: #b80710 !important; }
+        .btn-spotify { background-color: var(--spotify) !important; color: #fff !important; }
+        .btn-spotify:hover { background-color: #1aa34a !important; }
+        .btn-github { background-color: var(--github) !important; }
+        .btn-github:hover { background-color: #111417 !important; }
+        .btn-discord { background-color: var(--discord) !important; }
+        .btn-discord:hover { background-color: #434dbd !important; }
+        .btn-openai { background-color: var(--openai) !important; }
+        .btn-openai:hover { background-color: #0d8567 !important; }
 
         /* 📦 SANDIK & ENVANTER ALANI */
         .sandik-panel {
@@ -378,22 +390,54 @@
 
             <div class="panel">
                 <h3>🛍️ Mentor Ödül Marketi</h3>
-                <p style="font-size:12px; margin-bottom:15px; color:#666;">Kazandığınız Mentor Coin'leri harcayarak göstermelik ödüller edinin.</p>
+                <p style="font-size:12px; margin-bottom:15px; color:#666;">Kazandığınız Mentor Coin'leri harcayarak göstermelik ödüller ve premium üyelikler edinin.</p>
                 
+                <div class="market-item">
+                    <div>
+                        <strong>🤖 ChatGPT Plus Üyeliği (1 Aylık)</strong>
+                        <p style="font-size:11px; color:#777;">Projenizin kod mimarisini uçuracak yapay zeka desteği.</p>
+                    </div>
+                    <button class="btn-openai" onclick="buyMarketItem('ChatGPT Plus Üyeliği', 200, '🤖')">200 M-Coin</button>
+                </div>
+
+                <div class="market-item">
+                    <div>
+                        <strong>💻 GitHub Copilot Lisansı (3 Aylık)</strong>
+                        <p style="font-size:11px; color:#777;">Yazılımcı gençler için yapay zeka tabanlı kod ortağı.</p>
+                    </div>
+                    <button class="btn-github" onclick="buyMarketItem('GitHub Copilot Lisansı', 180, '💻')">180 M-Coin</button>
+                </div>
+
+                <div class="market-item">
+                    <div>
+                        <strong>🎬 Netflix Premium Kod (Göstermelik)</strong>
+                        <p style="font-size:11px; color:#777;">1 aylık Premium üyelik mola kodu.</p>
+                    </div>
+                    <button class="btn-netflix" onclick="buyMarketItem('Netflix Premium Üyelik', 120, '🎬')">120 M-Coin</button>
+                </div>
+
+                <div class="market-item">
+                    <div>
+                        <strong>🎵 Spotify Premium Üyelik (1 Aylık)</strong>
+                        <p style="font-size:11px; color:#777;">Odaklanarak kod yazarken reklamsız müzik keyfi.</p>
+                    </div>
+                    <button class="btn-spotify" onclick="buyMarketItem('Spotify Premium Üyelik', 60, '🎵')">60 M-Coin</button>
+                </div>
+
+                <div class="market-item">
+                    <div>
+                        <strong>🔮 Discord Nitro Ödülü</strong>
+                        <p style="font-size:11px; color:#777;">Girişim sunucularında dikkat çeken özel profil avantajları.</p>
+                    </div>
+                    <button class="btn-discord" onclick="buyMarketItem('Discord Nitro Üyelik', 80, '🔮')">80 M-Coin</button>
+                </div>
+
                 <div class="market-item">
                     <div>
                         <strong>☕ Starbucks Hediye Kahve Kuponu</strong>
                         <p style="font-size:11px; color:#777;">Girişimcilerin yakıtı! Göstermelik Tall boy kahve kodu.</p>
                     </div>
                     <button class="btn-starbucks" onclick="buyMarketItem('Starbucks Kahve Kuponu', 40, '☕')">40 M-Coin</button>
-                </div>
-
-                <div class="market-item">
-                    <div>
-                        <strong>🎬 Netflix Premium Kod (Göstermelik)</strong>
-                        <p style="font-size:11px; color:#777;">Yorucu kodlama gecelerinin ardından 1 aylık mola sineması.</p>
-                    </div>
-                    <button class="btn-netflix" onclick="buyMarketItem('Netflix Premium Üyelik', 120, '🎬')">120 M-Coin</button>
                 </div>
 
                 <div class="market-item">
@@ -406,7 +450,7 @@
 
                 <div class="market-item">
                     <div>
-                        <strong>📦 Melek Yatırımcı Altın Kutusu</strong>
+                        <strong>👑 Melek Yatırımcı Altın Kutusu</strong>
                         <p style="font-size:11px; color:#777;">Profilinize kalıcı "Altın Sponsor" ibaresi ekler.</p>
                     </div>
                     <button onclick="buyMarketItem('Melek Yatırımcı Altın Kutusu', 150, '👑')">150 M-Coin</button>
@@ -423,7 +467,7 @@
 
         <div class="sandik-panel">
             <h3>📦 Satın Alınan Sandıklarım & Envanterim</h3>
-            <p style="font-size:12px; color:#5f27cd;">Satın aldığınız tüm göstermelik ödüller, sertifikalar ve sponsorluklar bu sandıkta kilitli olarak saklanır.</p>
+            <p style="font-size:12px; color:#5f27cd;">Satın aldığınız tüm göstermelik ödüller, sertifikalar ve premium üyelikler bu sandıkta kilitli olarak saklanır.</p>
             <div class="envanter-grid" id="envanter-alani">
                 <span style="color:#7f8c8d; font-size:13px; font-style:italic;" id="bos-envanter-notu">Henüz bir sandık veya ödül satın alınmadı.</span>
             </div>
@@ -488,19 +532,18 @@
     }
 
     function simulateDonation(projectName, amount) {
-        let earned = amount / 10; // Her 10 TL için 1 Mentor Coin
+        let earned = amount / 10; 
         userData.mentorCoinBalance += earned;
         updateDashboardUI();
         alert(`Teşekkürler! "${projectName}" projesine ${amount} TL fon sağlandı. +${earned} Mentor Coin hesabınıza aktarıldı!`);
     }
 
-    // 📦 MARKET VE SANDIĞA GÖNDERME SİSTEMİ (Geliştirildi)
     function buyMarketItem(itemName, cost, emoji) {
         if (userData.mentorCoinBalance >= cost) {
             userData.mentorCoinBalance -= cost;
             
-            // Ürünü ismi ve emojisiyle envantere ekle
-            userData.envanter.push({ name: itemName, icon: emoji || '🌟' });
+            let itemIcon = emoji || '🎁';
+            userData.envanter.push({ name: itemName, icon: itemIcon });
             
             updateDashboardUI();
             updateEnvanterUI();
@@ -513,16 +556,18 @@
 
     function updateEnvanterUI() {
         const alan = document.getElementById('envanter-alani');
+        const bosNotu = document.getElementById('bos-envanter-notu');
+        
         if (userData.envanter.length > 0) {
-            document.getElementById('bos-envanter-notu').style.display = 'none';
-            alan.innerHTML = ""; // Temizle
+            if (bosNotu) bosNotu.style.display = 'none';
+            
+            alan.innerHTML = ""; 
             userData.envanter.forEach(item => {
                 alan.innerHTML += `<div class="envanter-item">🔒 ${item.icon} ${item.name}</div>`;
             });
         }
     }
 
-    // 📢 REKLAM SATIN ALMA VE KAYAN BAND SİSTEMİ
     function buyAdvertising() {
         const reklamMetni = document.getElementById('reklam-metni').value.trim();
         if (!reklamMetni) {
@@ -530,15 +575,13 @@
             return;
         }
 
-        const cost = 30; // Reklam verme bedeli 30 M-Coin
+        const cost = 30; 
         if (userData.mentorCoinBalance >= cost) {
             userData.mentorCoinBalance -= cost;
-            
-            // Reklamı çoklu sekmeli listeye ekle
             userData.reklamlar.push(`[📢 ${userData.username}]: ${reklamMetni}`);
             
             updateDashboardUI();
-            document.getElementById('reklam-metni').value = ""; // Formu temizle
+            document.getElementById('reklam-metni').value = ""; 
             
             updateReklamBandiUI();
             alert("🎉 Reklamınız başarıyla satın alındı ve üstteki kayan sekmeli panoya eklendi!");
@@ -553,7 +596,6 @@
         
         if (userData.reklamlar.length > 0) {
             band.style.display = 'block';
-            // Tüm reklam sekmelerini aralarına estetik ayraç koyarak birleştiriyoruz
             metinAlani.innerText = userData.reklamlar.join("   |   ");
         }
     }
