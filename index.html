@@ -1,291 +1,324 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geliştirici & mCoin Platformu</title>
-    <style>
-        /* Ana Tema ve Arka Plan Şablonu */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background: #1e293b;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #334155;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" defer></script>
+
+    <script>
+        // VARSAYILAN BAŞLANGIÇ VERİLERİ
+        const defaultProducts = [
+            { id: '1', name: 'Vakumlu Normal Yufka (6 Yaprak)', desc: '1000 gr taze imalat paket.', icon: 'fa-stroopwafel', inStock: true },
+            { id: '2', name: 'Su Böreklik Özel Yufka', desc: '700 gr kalın hamurlu su böreği yufkası.', icon: 'fa-stroopwafel', inStock: true },
+            { id: '3', name: 'Bol Malzemeli Ev Mantısı', desc: '500 gr dondurulmuş el mantısı.', icon: 'fa-bowl-rice', inStock: true }
+        ];
+
+        const defaultManagers = [
+            { user: 'admin', pass: '123', role: 'Süper Yönetici' }
+        ];
+
+        const defaultCorporates = [
+            { id: 'c1', company: 'Meram Gross Marketleri', name: 'Ahmet Çelik', phone: '0332 444 01 42', user: 'meramgross', pass: '4242' },
+            { id: 'c2', company: 'Selçuklu Unlu Mamülleri', name: 'Mehmet Kaya', phone: '0332 123 45 67', user: 'selcuklu', pass: '1234' }
+        ];
+
+        const defaultOrders = [
+            { id: 'o1', company: 'Meram Gross Marketleri', product: 'Vakumlu Normal Yufka (6 Yaprak)', quantity: '150 Paket', note: 'Sabah erkenden teslim.', status: 'Hazırlanıyor' }
+        ];
+
+        // TARAYICI HAFIZASINDAN VERİLERİ YÜKLEME
+        let products = JSON.parse(localStorage.getItem('ym_products')) || defaultProducts;
+        let managerAccounts = JSON.parse(localStorage.getItem('ym_managers')) || defaultManagers;
+        let corporateAccounts = JSON.parse(localStorage.getItem('ym_corporates')) || defaultCorporates;
+        let orders = JSON.parse(localStorage.getItem('ym_orders')) || defaultOrders;
+
+        let currentLoggedCorporate = null;
+
+        function saveToLocalStorage() {
+            localStorage.setItem('ym_products', JSON.stringify(products));
+            localStorage.setItem('ym_managers', JSON.stringify(managerAccounts));
+            localStorage.setItem('ym_corporates', JSON.stringify(corporateAccounts));
+            localStorage.setItem('ym_orders', JSON.stringify(orders));
         }
 
-        /* Sekme (Tab) Navigasyonu */
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .tab-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 10px 20px;
-            transition: 0.3s;
-        }
-        
-        .tab-btn.active, .tab-btn:hover {
-            color: #38bdf8;
-            border-bottom: 2px solid #38bdf8;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
+        function renderAll() {
+            renderClientProducts();
+            renderAdminStockTable();
+            renderCorporateTable();
+            renderOrdersTable();
+            renderManagersTable();
         }
 
-        /* Form Elemanları ve Girdiler */
-        textarea, input {
-            width: 100%;
-            background: #0f172a;
-            border: 1px solid #475569;
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: #38bdf8;
+        function renderClientProducts() {
+            const grid = document.getElementById('client-products-grid');
+            if(!grid) return; grid.innerHTML = '';
+            products.forEach(p => {
+                const col = document.createElement('div'); col.className = 'col-6 col-md-4';
+                const badge = p.inStock ? `<span class="badge bg-success small">Stokta Var</span>` : `<span class="badge bg-danger small">Tükendi</span>`;
+                col.innerHTML = `<div class="card h-100 product-card shadow-sm border-0"><div class="icon-wrapper"><i class="fa-solid ${p.icon} fa-2x"></i></div><div class="card-body p-2 text-center"><h6>${p.name}</h6><p class="text-muted small">${p.desc}</p>${badge}</div></div>`;
+                grid.appendChild(col);
+            });
         }
 
-        /* Buton Tasarımları */
-        button.primary-btn {
-            background: #0284c7;
-            color: #fff;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        
-        button.primary-btn:hover {
-            background: #0369a1;
+        function renderAdminStockTable() {
+            const tbody = document.getElementById('admin-stock-table-body');
+            if(!tbody) return; tbody.innerHTML = '';
+            products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><b class="small">${p.name}</b></td><td class="small text-muted">${p.desc}</td><td>${p.inStock?'<span class="badge bg-success">Var</span>':'<span class="badge bg-danger">Yok</span>'}</td><td class="text-end"><button class="btn btn-sm btn-dark p-1 px-2" style="font-size:11px;" onclick="toggleStock('${p.id}')">Durum Değiştir</button></td>`;
+                tbody.appendChild(tr);
+            });
         }
 
-        /* Gemini Yorum Alanı */
-        .ai-response {
-            background: #0f172a;
-            border-left: 4px solid #38bdf8;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 0 8px 8px 0;
-            display: none;
+        function toggleStock(id) {
+            const idx = products.findIndex(p => p.id === id);
+            if(idx !== -1) { products[idx].inStock = !products[idx].inStock; saveToLocalStorage(); renderAll(); }
         }
 
-        /* mCoin Göstergesi */
-        .coin-status {
-            background: #1e293b;
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid #eab308;
-            color: #eab308;
-            display: inline-block;
-            font-weight: bold;
-            margin-bottom: 20px;
+        function renderCorporateTable() {
+            const tbody = document.getElementById('corporate-table-body');
+            if(!tbody) return; tbody.innerHTML = '';
+            corporateAccounts.forEach(c => {
+                tbody.innerHTML += `<tr>
+                    <td class="fw-bold small text-dark">${c.company}</td>
+                    <td class="small">${c.name}</td>
+                    <td class="small">${c.phone}</td>
+                    <td><span class="badge bg-primary">${c.user}</span></td>
+                    <td><code class="text-dark">${c.pass}</code></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-danger p-1 px-2" style="font-size:11px;" onclick="deleteCorporate('${c.id}', '${c.company}')">
+                            <i class="fa-solid fa-trash-can"></i> Sil
+                        </button>
+                    </td>
+                </tr>`;
+            });
         }
 
-        /* mCoin Market Kart Yapısı */
-        .market-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        @media (max-width: 768px) {
-            .market-grid {
-                grid-template-columns: 1fr;
+        function deleteCorporate(id, companyName) {
+            if(confirm(companyName + ' şirket hesabını kalıcı olarak silmek istediğinize emin misiniz?')) {
+                corporateAccounts = corporateAccounts.filter(c => c.id !== id);
+                saveToLocalStorage();
+                renderAll();
             }
         }
-        
-        .market-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            transition: 0.3s;
-        }
-        
-        .market-card:hover {
-            border-color: #475569;
-        }
 
-        /* Kilit Açılan Gizli İçerikler */
-        .unlocked-content {
-            margin-top: 15px;
-            padding: 15px;
-            background: #1e293b;
-            border: 1px dashed #22c55e;
-            border-radius: 8px;
-            text-align: left;
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="openTab('proje-sekmesi')">🚀 Proje Yayınla & Yorumlat</button>
-        <button class="tab-btn" onclick="openTab('akademi-sekmesi')">🪙 mCoin Akademi & Geliştirme</button>
-    </div>
-
-    <div id="proje-sekmesi" class="tab-content active">
-        <h2>Projeni Paylaş ve Gemini'den Yorum Al</h2>
-        <p style="color: #94a3b8; margin-bottom: 20px;">Projenizin adını ve detaylarını yazın; yapay zeka anında kod yapısını, artılarını ve gelişim tavsiyelerini listelesin.</p>
-        
-        <input type="text" id="project-title" placeholder="Projenizin Adı Nedir?">
-        <textarea id="project-desc" rows="6" placeholder="Projenizi detaylıca anlatın... (Hangi dilleri kullandınız, amacı ne, ne yapmak istiyorsunuz?)"></textarea>
-        
-        <button class="primary-btn" onclick="analyzeProject()">🚀 Projeyi Gönder ve Gemini'ye Yorumlat</button>
-
-        <div id="ai-loading" style="display:none; margin-top:15px; color:#38bdf8; font-weight: 500;">
-            🤖 Gemini projeni inceliyor ve analiz hazırlıyor...
-        </div>
-        
-        <div id="ai-comment-box" class="ai-response">
-            <h4 style="color: #38bdf8; margin-top: 0; margin-bottom: 10px;">🤖 Gemini'nin Proje Analizi ve Yorumu:</h4>
-            <p id="ai-text" style="line-height: 1.6; margin: 0;"></p>
-        </div>
-    </div>
-
-    <div id="akademi-sekmesi" class="tab-content">
-        <h2>mCoin Geliştirme ve Öğretim Merkezi</h2>
-        <p style="color: #94a3b8; margin-bottom: 15px;">Kazandığınız mCoin'leri kullanarak Gemini'nin özel kod yapılarını ve eğitimlerini açın.</p>
-        
-        <div class="coin-status">Mevcut Bakiyeniz: <span id="coin-amount">500</span> mCoin</div>
-        
-        <div class="market-grid">
-            <div class="market-card">
-                <h3 style="margin-top: 0;">🛠️ Gemini Özel Optimizasyon Kodu</h3>
-                <p style="color: #94a3b8; font-size: 14px;">Projelerinizdeki veri işleme hızını optimize eden ve performansı artıran özel algoritma mimarisi.</p>
-                <p style="color: #eab308; font-weight: bold; font-size: 18px;">150 mCoin</p>
-                <button class="primary-btn" style="background:#eab308; color:#000;" onclick="buyItem(150, 'code-content')">Kodu Satın Al</button>
-                
-                <div id="code-content" class="unlocked-content">
-                    <b style="color:#22c55e;">🔓 Kod Kilidi Açıldı (Benim Geliştirdiğim Yapı):</b>
-                    <pre style="background:#0f172a; padding:10px; border-radius:5px; color:#38bdf8; margin-top: 10px; overflow-x: auto;">
-// Gemini Optimizasyon Fonksiyonu
-function optimizeData(arr) {
-    // Yinelenen verileri temizler ve hızı artırır
-    return [...new Set(arr)];
-}</pre>
-                </div>
-            </div>
-
-            <div class="market-card">
-                <h3 style="margin-top: 0;">📚 Gemini Algoritma Eğitimi</h3>
-                <p style="color: #94a3b8; font-size: 14px;">Kod yazarken mantıksal hataları (bug) sıfırlama, temiz kod yazma ve mimari kurma rehberi.</p>
-                <p style="color: #eab308; font-weight: bold; font-size: 18px;">250 mCoin</p>
-                <button class="primary-btn" style="background:#eab308; color:#000;" onclick="buyItem(250, 'lesson-content')">Eğitimi Satın Al</button>
-                
-                <div id="lesson-content" class="unlocked-content">
-                    <b style="color:#22c55e;">🔓 Eğitim Kilidi Açıldı (Sana Öğreteceğim Ders):</b>
-                    <p style="font-size:14px; margin-top:10px; line-height: 1.5;">
-                        <b>Ders 1 - Temiz Mimari:</b> Bir fonksiyon sadece tek bir iş yapmalıdır. Kod bloklarınızı iç içe çok fazla döngüyle (nested loops) doldurmayın. Bu durum işlemciyi yorar. Her zaman esnek ve okunabilir kalın!
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Sayfa Sekmeleri Arasında Geçiş Fonksiyonu
-    function openTab(tabId) {
-        // Tüm içerikleri gizle
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        // Tüm butonların aktifliğini kaldır
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        
-        // Seçilen sekmeyi ve butonu aktif et
-        document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-
-    // Proje Yorumlama Sistemi (Gemini Analiz Robotu)
-    function analyzeProject() {
-        const title = document.getElementById('project-title').value;
-        const desc = document.getElementById('project-desc').value;
-
-        // Boş bırakma kontrolü
-        if(!title.trim() || !desc.trim()) {
-            alert("Lütfen önce proje adını ve açıklamasını eksiksiz doldurun!");
-            return;
+        function renderOrdersTable() {
+            const tbody = document.getElementById('orders-table-body');
+            if(!tbody) return; tbody.innerHTML = '';
+            orders.forEach(o => {
+                let badgeColor = o.status === 'Hazır (Teslimata Uygun)' ? 'bg-success' : 'bg-warning text-dark';
+                tbody.innerHTML += `<tr>
+                    <td class="fw-bold small text-primary">${o.company}</td>
+                    <td class="small">${o.product}</td>
+                    <td class="small fw-bold">${o.quantity}</td>
+                    <td class="small text-muted">${o.note}</td>
+                    <td><span class="badge ${badgeColor}">${o.status}</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-xs btn-warning p-1 text-dark fw-bold mb-1 mb-md-0" style="font-size:10px;" onclick="changeOrderStatus('${o.id}', 'Hazırlanıyor')">Hazırlanıyor</button>
+                        <button class="btn btn-xs btn-success p-1 text-white fw-bold" style="font-size:10px;" onclick="changeOrderStatus('${o.id}', 'Hazır (Teslimata Uygun)')">Hazır</button>
+                    </td>
+                </tr>`;
+            });
         }
 
-        // Yükleniyor animasyonunu aç, eski yorumu gizle
-        document.getElementById('ai-loading').style.display = 'block';
-        document.getElementById('ai-comment-box').style.display = 'none';
+        function changeOrderStatus(orderId, newStatus) {
+            const idx = orders.findIndex(o => o.id === orderId);
+            if(idx !== -1) {
+                orders[idx].status = newStatus;
+                saveToLocalStorage();
+                renderAll();
+                if(currentLoggedCorporate) { renderCorporateSelfPanel(); }
+            }
+        }
 
-        // 1.5 saniye sonra Gemini yorumu üretir (Simülasyon)
-        setTimeout(() => {
-            document.getElementById('ai-loading').style.display = 'none';
+        function renderManagersTable() {
+            const tbody = document.getElementById('managers-table-body');
+            if(!tbody) return; tbody.innerHTML = '';
+            managerAccounts.forEach(m => {
+                tbody.innerHTML += `<tr><td class="fw-bold small">${m.user}</td><td class="small">${m.role}</td><td><code>${m.pass}</code></td></tr>`;
+            });
+        }
+
+        function renderCorporateSelfPanel() {
+            if(!currentLoggedCorporate) return;
+            document.getElementById('logged-corp-name').innerText = currentLoggedCorporate.company;
             
-            // Dinamik yapay zeka cevabı
-            const aiResponse = `"${title}" projesini derinlemesine inceledim! Paylaştığın detaylara göre harika bir fikir üzerinde çalışıyorsun. Bu projeyi büyütürken kodların modüler (parça parça) olmasına dikkat etmelisin. Ayrıca veri yönetimini optimize etmek için mCoin Akademi sekmesindeki geliştirdiğim özel kod bloklarını incelemeni kesinlikle öneririm. Yolun açık, harika gidiyorsun!`;
-            
-            document.getElementById('ai-text').innerText = aiResponse;
-            document.getElementById('ai-comment-box').style.display = 'block';
-        }, 1500);
-    }
+            const tbody = document.getElementById('my-orders-table-body');
+            tbody.innerHTML = '';
+            orders.filter(o => o.company === currentLoggedCorporate.company).forEach(o => {
+                let badgeColor = o.status === 'Hazır (Teslimata Uygun)' ? 'bg-success' : 'bg-warning text-dark';
+                tbody.innerHTML += `<tr><td class="fw-bold small">${o.product}</td><td class="small fw-bold text-success">${o.quantity}</td><td class="small text-muted">${o.note}</td><td><span class="badge ${badgeColor}">${o.status}</span></td></tr>`;
+            });
 
-    // mCoin Satın Alma ve İçerik Açma Sistemi
-    let currentBalance = 500; // Başlangıç bakiyesi
-    
-    function buyItem(cost, contentId) {
-        const contentDiv = document.getElementById(contentId);
-        
-        // Zaten satın alınmış mı kontrolü
-        if(contentDiv.style.display === 'block') {
-            alert("Bu içeriği zaten satın aldınız!");
-            return;
+            const select = document.getElementById('corpSelfProductSelect');
+            select.innerHTML = '';
+            products.forEach(p => {
+                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+            });
         }
 
-        // Bakiye yeterli mi kontrolü
-        if(currentBalance >= cost) {
-            currentBalance -= cost; // Bakiyeden düş
-            document.getElementById('coin-amount').innerText = currentBalance; // Ekranı güncelle
-            contentDiv.style.display = 'block'; // Gizli içeriği göster
-            alert("Satın alım başarılı! Gemini'nin özel içeriği sisteminize yüklendi.");
-        } else {
-            alert("Yetersiz mCoin bakiyesi! Projeler üreterek mCoin kazanmaya devam edin.");
-        }
-    }
-</script>
+        function unifiedLoginEngine() {
+            const type = document.getElementById('loginType').value;
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            const rememberBox = document.getElementById('rememberMe').checked;
+            const err = document.getElementById('loginError');
 
-</body>
-</html>
+            if (type === 'admin') {
+                const success = managerAccounts.some(acc => acc.user === u && acc.pass === p);
+                if (success) {
+                    err.classList.add('d-none');
+                    if(rememberBox) {
+                        localStorage.setItem('ym_remember_user', u);
+                        localStorage.setItem('ym_remember_type', 'admin');
+                    } else {
+                        localStorage.removeItem('ym_remember_user');
+                        localStorage.removeItem('ym_remember_type');
+                    }
+                    // Modal kapatma işlemini sağlama alalım
+                    const modalEl = document.getElementById('loginModal');
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    modalInstance.hide();
+                    
+                    document.getElementById('client-interface').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    renderAll();
+                    window.scrollTo(0, 0);
+                } else {
+                    err.classList.remove('d-none');
+                }
+            } else if (type === 'corporate') {
+                const matchedCorp = corporateAccounts.find(acc => acc.user === u && acc.pass === p);
+                if (matchedCorp) {
+                    err.classList.add('d-none');
+                    if(rememberBox) {
+                        localStorage.setItem('ym_remember_user', u);
+                        localStorage.setItem('ym_remember_type', 'corporate');
+                    } else {
+                        localStorage.removeItem('ym_remember_user');
+                        localStorage.removeItem('ym_remember_type');
+                    }
+                    const modalEl = document.getElementById('loginModal');
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    modalInstance.hide();
+
+                    currentLoggedCorporate = matchedCorp;
+                    document.getElementById('client-interface').style.display = 'none';
+                    document.getElementById('corporate-panel').style.display = 'block';
+                    renderCorporateSelfPanel();
+                    window.scrollTo(0, 0);
+                } else {
+                    err.classList.remove('d-none');
+                }
+            }
+        }
+
+        document.getElementById('corpSelfOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!currentLoggedCorporate) return;
+
+            orders.push({
+                id: 'o_' + Date.now(),
+                company: currentLoggedCorporate.company,
+                product: document.getElementById('corpSelfProductSelect').value,
+                quantity: document.getElementById('corpSelfQuantity').value,
+                note: document.getElementById('corpSelfNote').value || "-",
+                status: 'Hazırlanıyor'
+            });
+
+            saveToLocalStorage();
+            alert('Siparişiniz fabrikaya iletildi!');
+            document.getElementById('corpSelfOrderForm').reset();
+            switchCorpTab('tab-corp-orders');
+        });
+
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            products.push({ id: 'p_'+Date.now(), name: document.getElementById('newProdName').value, desc: document.getElementById('newProdDesc').value, icon: 'fa-stroopwafel', inStock: true });
+            saveToLocalStorage(); renderAll(); document.getElementById('addProductForm').reset();
+            closeModal('addProductModal');
+        });
+
+        document.getElementById('addCorporateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newCorp = {
+                id: 'c_' + Date.now(),
+                company: document.getElementById('corpCompany').value,
+                name: document.getElementById('corpName').value,
+                phone: document.getElementById('corpPhone').value,
+                user: document.getElementById('corpUser').value.trim(),
+                pass: document.getElementById('corpPass').value.trim()
+            };
+            corporateAccounts.push(newCorp);
+            saveToLocalStorage();
+            renderAll(); 
+            document.getElementById('addCorporateForm').reset();
+            closeModal('addCorporateModal');
+            alert('Kurumsal şirket hesabı başarıyla açıldı ve kalıcı olarak kaydedildi!');
+        });
+
+        document.getElementById('createOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            orders.push({
+                id: 'o_' + Date.now(),
+                company: document.getElementById('orderCompanySelect').value,
+                product: document.getElementById('orderProductSelect').value,
+                quantity: document.getElementById('orderQuantity').value,
+                note: document.getElementById('orderNote').value || "-",
+                status: 'Hazırlanıyor'
+            });
+            saveToLocalStorage(); renderAll(); document.getElementById('createOrderForm').reset();
+            closeModal('createOrderModal');
+        });
+
+        document.getElementById('addManagerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            managerAccounts.push({ user: document.getElementById('mgrUser').value.trim(), pass: document.getElementById('mgrPass').value.trim(), role: document.getElementById('mgrRole').value });
+            saveToLocalStorage(); renderAll(); document.getElementById('addManagerForm').reset();
+            closeModal('addManagerModal');
+        });
+
+        function populateOrderDropdowns() {
+            const compSelect = document.getElementById('orderCompanySelect');
+            const prodSelect = document.getElementById('orderProductSelect');
+            compSelect.innerHTML = ''; prodSelect.innerHTML = '';
+            corporateAccounts.forEach(c => { compSelect.innerHTML += `<option value="${c.company}">${c.company}</option>`; });
+            products.forEach(p => { prodSelect.innerHTML += `<option value="${p.name}">${p.name}</option>`; });
+        }
+
+        function closeModal(id) {
+            const modalEl = document.getElementById(id);
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if(modalInstance) modalInstance.hide();
+        }
+
+        function switchAdminTab(id) {
+            document.querySelectorAll('#admin-panel .panel-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('#admin-panel .sidebar .nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('link-' + id.replace('tab-', '')).classList.add('active');
+        }
+
+        function switchCorpTab(id) {
+            document.querySelectorAll('#corporate-panel .panel-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('#corporate-panel .corp-sidebar .nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('link-' + id.replace('tab-', '')).classList.add('active');
+            if(id === 'tab-corp-orders') { renderCorporateSelfPanel(); }
+        }
+
+        function logoutSystem() {
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('corporate-panel').style.display = 'none';
+            document.getElementById('client-interface').style.display = 'block';
+            document.getElementById('username').value = ''; document.getElementById('password').value = '';
+            currentLoggedCorporate = null;
+            window.scrollTo(0, 0);
+        }
+
+        window.onload = function() {
+            const savedUser = localStorage.getItem('ym_remember_user');
+            const savedType = localStorage.getItem('ym_remember_type');
+            if(savedUser && savedType) {
+                document.getElementById('username').value = savedUser;
+                document.getElementById('loginType').value = savedType;
+                document.getElementById('rememberMe').checked = true;
+            }
+            renderAll();
+        };
+    </script>
