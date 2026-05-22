@@ -2,1316 +2,290 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EduFund - Mobil Uyumlu Mikro Fonlama Platformu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geliştirici & mCoin Platformu</title>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --secondary: #06b6d4;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --purple: #6c5ce7;
-            --netflix: #E50914;
-            --spotify: #1DB954;
-            --openai: #10a37f;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        /* Ana Tema ve Arka Plan Şablonu */
         body {
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.5;
-            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-
-        /* 📣 DİNAMİK DUYURU BANDI */
-        .duyuru-bandi {
-            width: 100%;
-            background: var(--dark);
-            color: var(--warning);
-            padding: 8px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .duyuru-icerik {
-            display: inline-block;
-            animation: kaydir 25s linear infinite;
-            font-weight: bold;
-            font-size: 13px;
-            padding-left: 100%;
-        }
-
-        @keyframes kaydir {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-
-        header {
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 10px 0;
-        }
-
+        
         .container {
             width: 100%;
-            padding: 0 16px;
-            margin: 0 auto;
+            max-width: 1000px;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
         }
 
-        .nav-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .nav-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 6px;
-        }
-
+        /* Sekme (Tab) Navigasyonu */
         .nav-tabs {
             display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            width: 100%;
-            padding-bottom: 4px;
-            -webkit-overflow-scrolling: touch;
+            gap: 10px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-
-        .nav-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
+        
         .tab-btn {
-            background: #f1f5f9;
+            background: none;
             border: none;
-            padding: 8px 14px;
-            font-size: 13px;
+            color: #94a3b8;
+            font-size: 16px;
             font-weight: 600;
-            color: var(--gray);
             cursor: pointer;
-            border-radius: 20px;
-            transition: all 0.2s;
-            flex-shrink: 0;
+            padding: 10px 20px;
+            transition: 0.3s;
         }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
+        
+        .tab-btn.active, .tab-btn:hover {
+            color: #38bdf8;
+            border-bottom: 2px solid #38bdf8;
         }
-
-        /* 🪙 ÇİFT PARA BİRİMLİ YENİ CÜZDAN GÖSTERGESİ */
-        .nav-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            background: #f8fafc;
-            padding: 10px 12px;
-            border-radius: 12px;
-            margin-top: 5px;
-            border: 1px solid #e2e8f0;
-        }
-
-        @media (min-width: 480px) {
-            .nav-info {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-
-        .balances-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .token-display {
-            font-weight: bold;
-            color: var(--warning);
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .mentor-coin-display {
-            font-weight: bold;
-            color: #6c5ce7;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            background: #f3f0ff;
-            padding: 2px 8px;
-            border-radius: 8px;
-        }
-
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .user-emoji-avatar {
-            font-size: 20px;
-            background: #e2e8f0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-        }
-
-        .logout-btn {
-            background: #fee2e2;
-            color: #ef4444;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .switch-btn {
-            background: #e0f2fe;
-            color: #0369a1;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .screen {
+        
+        .tab-content {
             display: none;
-            padding: 16px 0 80px 0;
         }
-
-        .screen.active {
+        
+        .tab-content.active {
             display: block;
         }
 
-        .auth-card {
-            background: white;
-            padding: 24px 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        /* Form Elemanları ve Girdiler */
+        textarea, input {
             width: 100%;
-            max-width: 450px;
-            margin: 20px auto;
-        }
-
-        .auth-card h2 {
-            margin-bottom: 16px;
-            color: var(--primary);
-            text-align: center;
-            font-size: 22px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: #fff;
             padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 15px;
-            background: #f8fafc;
-            -webkit-appearance: none;
-        }
-
-        .remember-me-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .remember-me-container input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .btn {
-            background: var(--primary);
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            width: 100%;
-            text-align: center;
-            transition: background 0.2s;
-        }
-
-        .btn-donate {
-            background: var(--success);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
             font-size: 14px;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 10px;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #38bdf8;
         }
 
-        .btn-secondary {
-            background: #e2e8f0;
-            color: var(--dark);
-            margin-top: 10px;
-        }
-
-        .avatar-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 16px 0;
-        }
-
-        .avatar-option {
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px 8px;
-            text-align: center;
+        /* Buton Tasarımları */
+        button.primary-btn {
+            background: #0284c7;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            background: #f8fafc;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        button.primary-btn:hover {
+            background: #0369a1;
         }
 
-        .avatar-option.selected {
-            border-color: var(--primary);
-            background: #e0e7ff;
+        /* Gemini Yorum Alanı */
+        .ai-response {
+            background: #0f172a;
+            border-left: 4px solid #38bdf8;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            display: none;
         }
 
-        .avatar-option .emoji-pic {
-            font-size: 36px;
-            margin-bottom: 6px;
-        }
-
-        .dashboard-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .project-card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            border-left: 4px solid var(--secondary);
-        }
-
-        .progress-bar {
-            background: #e2e8f0;
-            height: 8px;
-            border-radius: 4px;
-            margin: 12px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            background: var(--success);
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease-in-out;
-        }
-
-        .funding-stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .investors-panel {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+        /* mCoin Göstergesi */
+        .coin-status {
+            background: #1e293b;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #eab308;
+            color: #eab308;
+            display: inline-block;
+            font-weight: bold;
             margin-bottom: 20px;
         }
 
-        .investor-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .investor-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .investor-avatar {
-            font-size: 18px;
-            background: #f1f5f9;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .investor-name {
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .investor-amount {
-            font-weight: bold;
-            color: var(--success);
-            background: #f0fdf4;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-
-        .account-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-        .account-item:hover {
-            border-color: var(--primary);
-            background: #f0fdf4;
-        }
-
+        /* mCoin Market Kart Yapısı */
         .market-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 12px;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
-        @media (min-width: 480px) {
-            .market-grid { grid-template-columns: repeat(2, 1fr); }
+        
+        @media (max-width: 768px) {
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
         }
-
+        
         .market-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 14px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 20px;
             border-radius: 12px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            transition: 0.3s;
+        }
+        
+        .market-card:hover {
+            border-color: #475569;
         }
 
-        .market-title { font-weight: bold; font-size: 13px; margin-bottom: 4px; }
-        .market-desc { font-size: 11px; color: var(--gray); margin-bottom: 8px; }
-        .market-price { font-weight: 800; color: var(--purple); font-size: 14px; margin-bottom: 10px; }
-
-        /* 👑 AKTİF PREMIUM ÜYELİKLER PANELİ */
-        .active-subs-panel {
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--secondary);
-        }
-        .sub-badge-flex {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .sub-badge {
-            background: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            border: 1px solid #cbd5e1;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* 📦 ÖZEL VE AYRI ENVANTER ALANI */
-        .envanter-section {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            border: 2px solid #e2e8f0;
+        /* Kilit Açılan Gizli İçerikler */
+        .unlocked-content {
             margin-top: 15px;
-        }
-        .envanter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .envanter-card {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 12px 8px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .envanter-card .card-icon { font-size: 28px; margin-bottom: 4px; }
-        .envanter-card h5 { font-size: 12px; font-weight: bold; margin-bottom: 6px; }
-        .envanter-card .btn-inv {
-            padding: 6px 8px;
-            font-size: 11px;
-            border-radius: 6px;
-            margin-top: 4px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .about-header {
-            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-            color: white;
-            padding: 24px 16px;
-            border-radius: 16px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .about-header h2 {
-            font-size: 20px;
-            margin-bottom: 6px;
-        }
-
-        .about-card-info {
-            background: white;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            border-top: 3px solid var(--primary);
-            margin-bottom: 16px;
-        }
-
-        .about-card-info h3 {
-            margin-bottom: 8px;
-            color: var(--primary);
-            font-size: 16px;
-        }
-
-        .verify-box {
-            background: #f0fdf4;
-            border: 1px dashed var(--success);
-            padding: 12px;
+            padding: 15px;
+            background: #1e293b;
+            border: 1px dashed #22c55e;
             border-radius: 8px;
-            margin-top: 12px;
+            text-align: left;
             display: none;
-        }
-
-        .coupon-box {
-            background: #eff6ff;
-            border: 1px dashed var(--primary);
-            padding: 6px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-weight: bold;
-            color: var(--primary);
-            margin-top: 6px;
-            font-size: 13px;
-        }
-
-        /* Modallar İçin Ekstra Stil */
-        .modal-overlay {
-            display: none;
-            background: rgba(0,0,0,0.6);
-            position: fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            z-index:1000;
-            justify-content: center;
-            align-items: center;
-            padding:20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="duyuru-bandi">
-        <div id="duyuruMetni" class="duyuru-icerik">⚡ EduFund Duyurusu: Projelere fon sağlayarak hem EduCoin hem de Özel Market ürünleri için Mentor Coin (M-Coin) kazanabilirsiniz!</div>
+<div class="container">
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="openTab('proje-sekmesi')">🚀 Proje Yayınla & Yorumlat</button>
+        <button class="tab-btn" onclick="openTab('akademi-sekmesi')">🪙 mCoin Akademi & Geliştirme</button>
     </div>
 
-    <header id="navbar" style="display: none;">
-        <div class="container nav-container">
-            <div class="nav-top">
-                <div class="logo" onclick="switchTab('projectsTab')">🚀 EduFund</div>
-                <div class="header-actions">
-                    <button class="switch-btn" onclick="openSwitchAccountModal()">🔄 Değiştir</button>
-                    <button class="logout-btn" onclick="logout()">Çıkış</button>
-                </div>
-            </div>
-            
-            <div class="nav-tabs">
-                <button class="tab-btn active" id="btn-projectsTab" onclick="switchTab('projectsTab')">Projeler</button>
-                <button class="tab-btn" id="btn-investorsTab" onclick="switchTab('investorsTab')">Yatırımcılar & Market</button>
-                <button class="tab-btn" id="btn-aboutTab" onclick="switchTab('aboutTab')">Hakkımızda</button>
-            </div>
+    <div id="proje-sekmesi" class="tab-content active">
+        <h2>Projeni Paylaş ve Gemini'den Yorum Al</h2>
+        <p style="color: #94a3b8; margin-bottom: 20px;">Projenizin adını ve detaylarını yazın; yapay zeka anında kod yapısını, artılarını ve gelişim tavsiyelerini listelesin.</p>
+        
+        <input type="text" id="project-title" placeholder="Projenizin Adı Nedir?">
+        <textarea id="project-desc" rows="6" placeholder="Projenizi detaylıca anlatın... (Hangi dilleri kullandınız, amacı ne, ne yapmak istiyorsunuz?)"></textarea>
+        
+        <button class="primary-btn" onclick="analyzeProject()">🚀 Projeyi Gönder ve Gemini'ye Yorumlat</button>
 
-            <div class="nav-info">
-                <div class="balances-wrapper">
-                    <div class="token-display">🪙 <span id="userTokens">0</span> EC</div>
-                    <div class="mentor-coin-display">🔮 <span id="userMentorCoins">0</span> M-Coin</div>
-                </div>
-                <div class="user-badge">
-                    <div id="navAvatar" class="user-emoji-avatar">🧑‍💻</div>
-                    <div style="max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        <span id="navUsername">Kullanıcı</span><span id="navBadgeContainer"></span>
-                    </div>
-                </div>
-            </div>
+        <div id="ai-loading" style="display:none; margin-top:15px; color:#38bdf8; font-weight: 500;">
+            🤖 Gemini projeni inceliyor ve analiz hazırlıyor...
         </div>
-    </header>
+        
+        <div id="ai-comment-box" class="ai-response">
+            <h4 style="color: #38bdf8; margin-top: 0; margin-bottom: 10px;">🤖 Gemini'nin Proje Analizi ve Yorumu:</h4>
+            <p id="ai-text" style="line-height: 1.6; margin: 0;"></p>
+        </div>
+    </div>
 
-    <div class="container">
-
-        <div id="authScreen" class="screen active">
-            <div class="auth-card">
-                <h2 id="authTitle">EduFund'a Kayıt Ol</h2>
+    <div id="akademi-sekmesi" class="tab-content">
+        <h2>mCoin Geliştirme ve Öğretim Merkezi</h2>
+        <p style="color: #94a3b8; margin-bottom: 15px;">Kazandığınız mCoin'leri kullanarak Gemini'nin özel kod yapılarını ve eğitimlerini açın.</p>
+        
+        <div class="coin-status">Mevcut Bakiyeniz: <span id="coin-amount">500</span> mCoin</div>
+        
+        <div class="market-grid">
+            <div class="market-card">
+                <h3 style="margin-top: 0;">🛠️ Gemini Özel Optimizasyon Kodu</h3>
+                <p style="color: #94a3b8; font-size: 14px;">Projelerinizdeki veri işleme hızını optimize eden ve performansı artıran özel algoritma mimarisi.</p>
+                <p style="color: #eab308; font-weight: bold; font-size: 18px;">150 mCoin</p>
+                <button class="primary-btn" style="background:#eab308; color:#000;" onclick="buyItem(150, 'code-content')">Kodu Satın Al</button>
                 
-                <form id="registerForm" onsubmit="handleRegister(event)">
-                    <div class="form-group">
-                        <label>Ad Soyad</label>
-                        <input type="text" id="regName" required placeholder="Arda Berk Çelenli">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Kullanıcı Türü</label>
-                        <select id="regRole" onchange="toggleRegFields()" required>
-                            <option value="student">Liseli Girişimci</option>
-                            <option value="donor">Yatırımcı / Fon Sağlayıcı</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>E-posta Adresi</label>
-                        <input type="email" id="regEmail" required placeholder="ornek@mail.com">
-                    </div>
-
-                    <div id="studentFields">
-                        <div class="form-group">
-                            <label>Lise Adı</label>
-                            <input type="text" id="regSchool" placeholder="Kocaeli Anadolu Lisesi">
-                        </div>
-                        <div class="form-group">
-                            <label>Sınıf</label>
-                            <select id="regGrade">
-                                <option value="9">9. Sınıf</option>
-                                <option value="10">10. Sınıf</option>
-                                <option value="11">11. Sınıf</option>
-                                <option value="12">12. Sınıf</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="donorFields" style="display: none;">
-                        <div class="form-group">
-                            <label>Şirket / Kurum veya Unvan</label>
-                            <input type="text" id="regCompany" placeholder="Teknopark A.Ş. veya Bireysel">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Şifre</label>
-                        <input type="password" id="regPassword" required placeholder="••••••••">
-                    </div>
-
-                    <button type="button" id="btnSendCode" onclick="generateAndShowCode()" class="btn">Onay Kodu Üret</button>
-
-                    <div id="verifyBox" class="verify-box">
-                        <label style="font-weight: bold; font-size: 13px;">E-posta Onay Kodu</label>
-                        <input type="text" id="regCode" placeholder="Ekranda çıkan kodu girin" style="margin: 6px 0;">
-                        <button type="submit" class="btn" style="background: var(--success)">Hesap Oluştur</button>
-                    </div>
-
-                    <button type="button" class="btn btn-secondary" onclick="switchAuthMode(false)">Zaten hesabım var, Giriş Yap</button>
-                </form>
-
-                <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
-                    <div class="form-group">
-                        <label>E-posta Adresi</label>
-                        <input type="email" id="loginEmail" required placeholder="ornek@mail.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Şifre</label>
-                        <input type="password" id="loginPassword" required placeholder="••••••••">
-                    </div>
-
-                    <div class="remember-me-container">
-                        <input type="checkbox" id="loginRememberMe">
-                        <label for="loginRememberMe" style="font-weight: 600; font-size: 13px; cursor: pointer;">Beni Hatırla</label>
-                    </div>
-
-                    <button type="submit" class="btn">Giriş Yap</button>
-                    <button type="button" class="btn btn-secondary" onclick="switchAuthMode(true)">Hesabın yok mu? Kayıt Ol</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="avatarScreen" class="screen">
-            <div class="auth-card">
-                <h2 style="font-size:18px;">Karakterini Seç</h2>
-                <div class="avatar-grid">
-                    <div class="avatar-option selected" onclick="selectAvatar(this, '🧑‍💻')">
-                        <div class="emoji-pic">🧑‍💻</div>
-                        <div style="font-size:12px;">Geliştirici</div>
-                    </div>
-                    <div class="avatar-option" onclick="selectAvatar(this, '🚀')">
-                        <div class="emoji-pic">🚀</div>
-                        <div style="font-size:12px;">Girişimci</div>
-                    </div>
-                    <div class="avatar-option" onclick="selectAvatar(this, '💼')">
-                        <div class="emoji-pic">💼</div>
-                        <div style="font-size:12px;">Yatırımcı</div>
-                    </div>
-                    <div class="avatar-option" onclick="selectAvatar(this, '👑')">
-                        <div class="emoji-pic">👑</div>
-                        <div style="font-size:12px;">Lider</div>
-                    </div>
-                </div>
-                <button class="btn" onclick="saveAvatarSelection()">Karakteri Onayla</button>
-            </div>
-        </div>
-
-        <div id="projectsTab" class="screen">
-            <div class="dashboard-grid">
-                <div>
-                    <div style="display: flex; flex-direction:column; gap:10px; margin-bottom: 16px;">
-                        <h2 style="font-size:18px;">Aktif Liseli Projeleri</h2>
-                        <button id="addProjectBtn" class="btn" style="padding: 10px;" onclick="openProjectModal()">+ Proje Başvurusu Yap</button>
-                    </div>
-                    <div id="projectContainer"></div>
+                <div id="code-content" class="unlocked-content">
+                    <b style="color:#22c55e;">🔓 Kod Kilidi Açıldı (Benim Geliştirdiğim Yapı):</b>
+                    <pre style="background:#0f172a; padding:10px; border-radius:5px; color:#38bdf8; margin-top: 10px; overflow-x: auto;">
+// Gemini Optimizasyon Fonksiyonu
+function optimizeData(arr) {
+    // Yinelenen verileri temizler ve hızı artırır
+    return [...new Set(arr)];
+}</pre>
                 </div>
             </div>
-        </div>
 
-        <div id="investorsTab" class="screen">
-            <div class="dashboard-grid">
+            <div class="market-card">
+                <h3 style="margin-top: 0;">📚 Gemini Algoritma Eğitimi</h3>
+                <p style="color: #94a3b8; font-size: 14px;">Kod yazarken mantıksal hataları (bug) sıfırlama, temiz kod yazma ve mimari kurma rehberi.</p>
+                <p style="color: #eab308; font-weight: bold; font-size: 18px;">250 mCoin</p>
+                <button class="primary-btn" style="background:#eab308; color:#000;" onclick="buyItem(250, 'lesson-content')">Eğitimi Satın Al</button>
                 
-                <div class="active-subs-panel">
-                    <h4 style="font-size:13px;">⚡ Aktif Premium Üyelikleriniz</h4>
-                    <div class="sub-badge-flex" id="activeSubsContainer">
-                        <span style="color:var(--gray); font-size:11px; font-style:italic;" id="emptySubText">Envanterinizden aktifleştirilmiş kupon bulunmamaktadır.</span>
-                    </div>
+                <div id="lesson-content" class="unlocked-content">
+                    <b style="color:#22c55e;">🔓 Eğitim Kilidi Açıldı (Sana Öğreteceğim Ders):</b>
+                    <p style="font-size:14px; margin-top:10px; line-height: 1.5;">
+                        <b>Ders 1 - Temiz Mimari:</b> Bir fonksiyon sadece tek bir iş yapmalıdır. Kod bloklarınızı iç içe çok fazla döngüyle (nested loops) doldurmayın. Bu durum işlemciyi yorar. Her zaman esnek ve okunabilir kalın!
+                    </p>
                 </div>
-
-                <div class="investors-panel">
-                    <h3 style="font-size:16px;">👥 Destekçiler ve Bağışlar</h3>
-                    <div class="investor-list" id="investorContainer"></div>
-                </div>
-
-                <div class="investors-panel">
-                    <h3 style="font-size:16px;">🪙 Ödül ve Üyelik Marketi</h3>
-                    <p style="font-size:11px; color:var(--gray); margin-bottom:5px;">EduCoin veya M-Coin kullanarak envanterinizi doldurun.</p>
-                    
-                    <div class="market-grid">
-                        <div class="market-card">
-                            <div>
-                                <div class="market-title">🥇 "Yılın Destekçisi" Rozeti</div>
-                                <div class="market-desc">Profilinize havalı bir madalya ekler.</div>
-                            </div>
-                            <div>
-                                <div class="market-price">100 EduCoin</div>
-                                <button class="btn" style="padding:8px; font-size:12px;" onclick="buyBadgeProduct()">Satın Al</button>
-                            </div>
-                        </div>
-                        <div class="market-card">
-                            <div>
-                                <div class="market-title">🎟️ %25 Eğitim İndirimi</div>
-                                <div class="market-desc">Anlaşmalı eğitimlerde geçerli.</div>
-                            </div>
-                            <div>
-                                <div class="market-price">150 EduCoin</div>
-                                <button class="btn" style="padding:8px; font-size:12px;" onclick="buyCouponProduct(150, 25)">Kuponu Al</button>
-                                <div id="coupon-25" class="coupon-box" style="display:none;"></div>
-                            </div>
-                        </div>
-                        <div class="market-card" style="border: 1px dashed var(--purple);">
-                            <div>
-                                <div class="market-title">📦 Gizemli Yazılımcı Sandığı</div>
-                                <div class="market-desc">Açıldığında rastgele 1 adet Premium kupon verir!</div>
-                            </div>
-                            <div>
-                                <div class="market-price" style="color:var(--purple);">40 M-Coin</div>
-                                <button class="btn" style="padding:8px; font-size:12px; background:var(--purple);" onclick="buyMarketItem('Gizemli Yazılımcı Sandığı', 40, '📦', 'chest')">Sandık Satın Al</button>
-                            </div>
-                        </div>
-                        <div class="market-card">
-                            <div>
-                                <div class="market-title">🤖 ChatGPT Plus (1 Aylık)</div>
-                                <div class="market-desc">Yazılım süreçlerinizi hızlandırın.</div>
-                            </div>
-                            <div>
-                                <div class="market-price" style="color:var(--purple);">150 M-Coin</div>
-                                <button class="btn" style="padding:8px; font-size:12px; background:var(--openai);" onclick="buyMarketItem('ChatGPT Plus Üyeliği', 150, '🤖', 'coupon')">Kuponu Al</button>
-                            </div>
-                        </div>
-                        <div class="market-card">
-                            <div>
-                                <div class="market-title">🎵 Spotify Premium (1 Aylık)</div>
-                                <div class="market-desc">Kod yazarken kesintisiz müzik dinleyin.</div>
-                            </div>
-                            <div>
-                                <div class="market-price" style="color:var(--purple);">60 M-Coin</div>
-                                <button class="btn" style="padding:8px; font-size:12px; background:var(--spotify);" onclick="buyMarketItem('Spotify Premium', 60, '🎵', 'coupon')">Kuponu Al</button>
-                            </div>
-                        </div>
-                        <div class="market-card">
-                            <div>
-                                <div class="market-title">🎬 Netflix Premium (1 Aylık)</div>
-                                <div class="market-desc">Yorucu bir günün ardından mola zamanı.</div>
-                            </div>
-                            <div>
-                                <div class="market-price" style="color:var(--purple);">100 M-Coin</div>
-                                <button class="btn" style="padding:8px; font-size:12px; background:var(--netflix);" onclick="buyMarketItem('Netflix Premium', 100, '🎬', 'coupon')">Kuponu Al</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="envanter-section">
-                    <h3 style="font-size:15px;">💼 Kişisel Depo & Özel Envanter</h3>
-                    <p style="font-size:11px; color:var(--gray);">Aldığınız paketleri ve sandıkları buradan yönetin.</p>
-                    <div class="envanter-grid" id="envanterContainer">
-                        <div style="grid-column: 1 / -1; text-align: center; color:var(--gray); font-style: italic; font-size:12px; padding:10px;" id="emptyInventoryText">
-                            Envanteriniz şu anda boş.
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
-
-        <div id="aboutTab" class="screen">
-            <div class="about-header">
-                <h2>🚀 Hakkımızda</h2>
-                <p style="font-size:12px;">Geleceğin Liderleri Burada Yetişiyor</p>
-            </div>
-            <div class="about-card-info">
-                <h3>Biz Kimiz?</h3>
-                <p style="font-size: 13px; color: #334155; text-align: left;">
-                    EduFund, liseli gençleri desteklemek amacıyla kurulmuş öncü bir mikro fonlama platformudur. Geleneksel finansmanın uzağında kalan yetenekleri kurumsal ve bireysel bağışçılarla bir araya getiriyoruz.
-                </p>
-            </div>
-        </div>
-
     </div>
+</div>
 
-    <div id="projectModal" class="modal-overlay">
-        <div class="auth-card" style="margin: auto;">
-            <h2 style="font-size:18px;">Yeni Proje Başvurusu</h2>
-            <form onsubmit="handleNewProjectSubmit(event)">
-                <div class="form-group">
-                    <label>Proje Adı</label>
-                    <input type="text" id="newProjTitle" required placeholder="Örn: Akıllı Tarım Robotu">
-                </div>
-                <div class="form-group">
-                    <label>Proje Özeti</label>
-                    <textarea id="newProjDesc" rows="3" required placeholder="Projenizi açıklayın..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Hedef Fon (TL)</label>
-                    <input type="number" id="newProjGoal" required placeholder="25000">
-                </div>
-                <div class="form-group">
-                    <label>Kategori</label>
-                    <select id="newProjCategory">
-                        <option value="Yazılım">Yazılım</option>
-                        <option value="Robotik">Robotik</option>
-                        <option value="Sosyal Sorumluluk">Sosyal Sorumluluk</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Yayınla</button>
-                <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Kapat</button>
-            </form>
-        </div>
-    </div>
+<script>
+    // Sayfa Sekmeleri Arasında Geçiş Fonksiyonu
+    function openTab(tabId) {
+        // Tüm içerikleri gizle
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        // Tüm butonların aktifliğini kaldır
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Seçilen sekmeyi ve butonu aktif et
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
 
-    <div id="switchAccountModal" class="modal-overlay">
-        <div class="auth-card" style="margin: auto;">
-            <h2 style="font-size:18px; margin-bottom:10px;">Hesap Değiştir</h2>
-            <div id="accountListContainer"></div>
-            <button type="button" class="btn btn-secondary" onclick="closeSwitchAccountModal()">İptal</button>
-        </div>
-    </div>
+    // Proje Yorumlama Sistemi (Gemini Analiz Robotu)
+    function analyzeProject() {
+        const title = document.getElementById('project-title').value;
+        const desc = document.getElementById('project-desc').value;
 
-    <script>
-        // Durum Yönetimi (State)
-        let generatedCode = "";
-        let selectedEmoji = "🧑‍💻";
-        let currentUser = null;
-        let users = JSON.parse(localStorage.getItem('edu_users')) || [];
-        let projects = JSON.parse(localStorage.getItem('edu_projects')) || [
-            { id: 1, title: "Yapay Zeka Destekli Ders Asistanı", desc: "Liseli öğrenciler için ders çalışma rutinlerini optimize eden yerli AI.", goal: 30000, current: 12500, category: "Yazılım", author: "Mert Yılmaz" },
-            { id: 2, title: "Otonom Çöp Toplama Robotu", desc: "Sahilleri temizlemek üzere tasarlanan güneş enerjili mini robot projesi.", goal: 50000, current: 45000, category: "Robotik", author: "Selin Kaya" }
-        ];
-        let globalDonations = JSON.parse(localStorage.getItem('edu_donations')) || [
-            { name: "Ahmet Yılmaz", amount: 2500 },
-            { name: "Eser Teknoloji A.Ş.", amount: 10000 }
-        ];
-
-        window.onload = function() {
-            checkAutoLogin();
-            renderProjects();
-            renderInvestors();
-        };
-
-        function switchAuthMode(toRegister) {
-            document.getElementById('registerForm').style.display = toRegister ? 'block' : 'none';
-            document.getElementById('loginForm').style.display = toRegister ? 'none' : 'block';
-            document.getElementById('authTitle').innerText = toRegister ? "EduFund'a Kayıt Ol" : "EduFund'a Giriş Yap";
+        // Boş bırakma kontrolü
+        if(!title.trim() || !desc.trim()) {
+            alert("Lütfen önce proje adını ve açıklamasını eksiksiz doldurun!");
+            return;
         }
 
-        function toggleRegFields() {
-            const role = document.getElementById('regRole').value;
-            document.getElementById('studentFields').style.display = role === 'student' ? 'block' : 'none';
-            document.getElementById('donorFields').style.display = role === 'donor' ? 'block' : 'none';
-        }
+        // Yükleniyor animasyonunu aç, eski yorumu gizle
+        document.getElementById('ai-loading').style.display = 'block';
+        document.getElementById('ai-comment-box').style.display = 'none';
 
-        function generateAndShowCode() {
-            generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-            alert("🔒 Simüle Edilen E-posta Onay Kodunuz: " + generatedCode);
-            document.getElementById('verifyBox').style.display = 'block';
-            document.getElementById('btnSendCode').style.display = 'none';
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const codeInput = document.getElementById('regCode').value;
-            if(codeInput !== generatedCode) {
-                alert("❌ Hatalı onay kodu!");
-                return;
-            }
-
-            const email = document.getElementById('regEmail').value;
-            if(users.find(u => u.email === email)) {
-                alert("❌ Bu e-posta adresi zaten kayıtlı!");
-                return;
-            }
-
-            const newUser = {
-                name: document.getElementById('regName').value,
-                role: document.getElementById('regRole').value,
-                email: email,
-                password: document.getElementById('regPassword').value,
-                school: document.getElementById('regSchool').value || "",
-                grade: document.getElementById('regGrade').value || "",
-                company: document.getElementById('regCompany').value || "",
-                tokens: 200, // Başlangıç EduCoin hediyesi
-                mentorCoins: 50, // Başlangıç M-Coin hediyesi
-                avatar: "🧑‍💻",
-                inventory: [],
-                activeSubs: []
-            };
-
-            users.push(newUser);
-            localStorage.setItem('edu_users', JSON.stringify(users));
-            currentUser = newUser;
+        // 1.5 saniye sonra Gemini yorumu üretir (Simülasyon)
+        setTimeout(() => {
+            document.getElementById('ai-loading').style.display = 'none';
             
-            // Avatar seçimine yönlendir
-            document.getElementById('authScreen').classList.remove('active');
-            document.getElementById('avatarScreen').classList.add('active');
-        }
-
-        function selectAvatar(element, emoji) {
-            document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedEmoji = emoji;
-        }
-
-        function saveAvatarSelection() {
-            currentUser.avatar = selectedEmoji;
-            updateUserInStorage();
-            document.getElementById('avatarScreen').classList.remove('active');
-            initDashboard();
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('loginRememberMe').checked;
-
-            const user = users.find(u => u.email === email && u.password === pass);
-            if(!user) {
-                alert("❌ E-posta veya şifre hatalı!");
-                return;
-            }
-
-            currentUser = user;
-            if(rememberMe) {
-                localStorage.setItem('edu_logged_email', email);
-            }
-            initDashboard();
-        }
-
-        function checkAutoLogin() {
-            const savedEmail = localStorage.getItem('edu_logged_email');
-            if(savedEmail) {
-                const user = users.find(u => u.email === savedEmail);
-                if(user) {
-                    currentUser = user;
-                    initDashboard();
-                }
-            }
-        }
-
-        function initDashboard() {
-            document.getElementById('authScreen').classList.remove('active');
-            document.getElementById('navbar').style.display = 'block';
-            switchTab('projectsTab');
-            updateNavbarInfo();
-            renderInventory();
-            renderActiveSubs();
-        }
-
-        function updateNavbarInfo() {
-            if(!currentUser) return;
-            document.getElementById('userTokens').innerText = currentUser.tokens;
-            document.getElementById('userMentorCoins').innerText = currentUser.mentorCoins;
-            document.getElementById('navUsername').innerText = currentUser.name;
-            document.getElementById('navAvatar').innerText = currentUser.avatar;
+            // Dinamik yapay zeka cevabı
+            const aiResponse = `"${title}" projesini derinlemesine inceledim! Paylaştığın detaylara göre harika bir fikir üzerinde çalışıyorsun. Bu projeyi büyütürken kodların modüler (parça parça) olmasına dikkat etmelisin. Ayrıca veri yönetimini optimize etmek için mCoin Akademi sekmesindeki geliştirdiğim özel kod bloklarını incelemeni kesinlikle öneririm. Yolun açık, harika gidiyorsun!`;
             
-            // Eğer rol öğrenci ise proje ekleme butonunu göster, yatırımcı ise gizle
-            document.getElementById('addProjectBtn').style.display = currentUser.role === 'student' ? 'block' : 'none';
+            document.getElementById('ai-text').innerText = aiResponse;
+            document.getElementById('ai-comment-box').style.display = 'block';
+        }, 1500);
+    }
+
+    // mCoin Satın Alma ve İçerik Açma Sistemi
+    let currentBalance = 500; // Başlangıç bakiyesi
+    
+    function buyItem(cost, contentId) {
+        const contentDiv = document.getElementById(contentId);
+        
+        // Zaten satın alınmış mı kontrolü
+        if(contentDiv.style.display === 'block') {
+            alert("Bu içeriği zaten satın aldınız!");
+            return;
         }
 
-        function updateUserInStorage() {
-            users = users.map(u => u.email === currentUser.email ? currentUser : u);
-            localStorage.setItem('edu_users', JSON.stringify(users));
+        // Bakiye yeterli mi kontrolü
+        if(currentBalance >= cost) {
+            currentBalance -= cost; // Bakiyeden düş
+            document.getElementById('coin-amount').innerText = currentBalance; // Ekranı güncelle
+            contentDiv.style.display = 'block'; // Gizli içeriği göster
+            alert("Satın alım başarılı! Gemini'nin özel içeriği sisteminize yüklendi.");
+        } else {
+            alert("Yetersiz mCoin bakiyesi! Projeler üreterek mCoin kazanmaya devam edin.");
         }
+    }
+</script>
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            const targetTab = document.getElementById(tabId);
-            if(targetTab) targetTab.classList.add('active');
-            
-            const targetBtn = document.getElementById('btn-' + tabId);
-            if(targetBtn) targetBtn.classList.add('active');
-        }
-
-        // Proje Yönetimi
-        function renderProjects() {
-            const container = document.getElementById('projectContainer');
-            container.innerHTML = "";
-            
-            projects.forEach(p => {
-                const percent = Math.min(Math.round((p.current / p.goal) * 100), 100);
-                const card = document.createElement('div');
-                card.className = "project-card";
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:11px; font-weight:bold; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:10px;">${p.category}</span>
-                        <span style="font-size:12px; color:var(--gray)">Yazar: ${p.author}</span>
-                    </div>
-                    <h3 style="margin: 8px 0 4px 0; font-size:15px;">${p.title}</h3>
-                    <p style="font-size:12px; color:var(--gray); margin-bottom:10px;">${p.desc}</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${percent}%"></div>
-                    </div>
-                    <div class="funding-stats">
-                        <span>%${percent} Fonlandı</span>
-                        <span>${p.current.toLocaleString()} TL / ${p.goal.toLocaleString()} TL</span>
-                    </div>
-                    <button class="btn-donate" onclick="fundProject(${p.id})">🪙 25 EduCoin ile Destek Ol</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function fundProject(id) {
-            if(!currentUser) return alert("Lütfen önce giriş yapın.");
-            if(currentUser.tokens < 25) return alert("❌ Yetersiz EduCoin! Projelere destek olmak için bütçeniz yetmiyor.");
-
-            currentUser.tokens -= 25;
-            currentUser.mentorCoins += 5; // Her destek için 5 M-Coin hediye
-            
-            projects = projects.map(p => {
-                if(p.id === id) {
-                    p.current += 500; // Her 25 EduCoin simüle olarak 500 TL kazandırır.
-                }
-                return p;
-            });
-
-            globalDonations.unshift({ name: currentUser.name, amount: 500 });
-
-            localStorage.setItem('edu_projects', JSON.stringify(projects));
-            localStorage.setItem('edu_donations', JSON.stringify(globalDonations));
-            
-            updateUserInStorage();
-            updateNavbarInfo();
-            renderProjects();
-            renderInvestors();
-            alert("🎉 Başarıyla destek olundu! 5 Mentor Coin (M-Coin) kazandınız.");
-        }
-
-        function openProjectModal() {
-            document.getElementById('projectModal').style.display = 'flex';
-        }
-
-        function closeProjectModal() {
-            document.getElementById('projectModal').style.display = 'none';
-        }
-
-        function handleNewProjectSubmit(e) {
-            e.preventDefault();
-            const newProj = {
-                id: Date.now(),
-                title: document.getElementById('newProjTitle').value,
-                desc: document.getElementById('newProjDesc').value,
-                goal: parseInt(document.getElementById('newProjGoal').value),
-                current: 0,
-                category: document.getElementById('newProjCategory').value,
-                author: currentUser.name
-            };
-
-            projects.push(newProj);
-            localStorage.setItem('edu_projects', JSON.stringify(projects));
-            renderProjects();
-            closeProjectModal();
-            alert("🚀 Projeniz başarıyla incelenmek üzere yayınlandı!");
-        }
-
-        // Market ve Envanter Mekanizması
-        function renderInvestors() {
-            const container = document.getElementById('investorContainer');
-            container.innerHTML = "";
-            globalDonations.slice(0, 5).forEach(d => {
-                const item = document.createElement('div');
-                item.className = "investor-item";
-                item.innerHTML = `
-                    <div class="investor-info">
-                        <div class="investor-avatar">👤</div>
-                        <div class="investor-name">${d.name}</div>
-                    </div>
-                    <div class="investor-amount">+${d.amount} TL</div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function buyBadgeProduct() {
-            if(currentUser.tokens < 100) return alert("❌ Yetersiz EduCoin bakiyesi.");
-            currentUser.tokens -= 100;
-            alert("🥇 Satın alma başarılı! Profil rozetiniz güncellendi.");
-            updateUserInStorage();
-            updateNavbarInfo();
-        }
-
-        function buyCouponProduct(cost, discount) {
-            if(currentUser.tokens < cost) return alert("❌ Yetersiz EduCoin bakiyesi.");
-            currentUser.tokens -= cost;
-            const randomCode = "EDU-" + Math.floor(1000 + Math.random() * 9000);
-            const box = document.getElementById(`coupon-${discount}`);
-            box.style.display = "block";
-            box.innerText = `Kodunuz: ${randomCode}`;
-            updateUserInStorage();
-            updateNavbarInfo();
-            alert("🎟️ İndirim kuponunuz üretildi, aşağıdan kodu kopyalayabilirsiniz.");
-        }
-
-        function buyMarketItem(title, price, icon, type) {
-            if(currentUser.mentorCoins < price) return alert("❌ Yetersiz Mentor Coin (M-Coin) bakiyesi.");
-            currentUser.mentorCoins -= price;
-            
-            if(!currentUser.inventory) currentUser.inventory = [];
-            currentUser.inventory.push({ id: Date.now(), title, icon, type });
-            
-            updateUserInStorage();
-            updateNavbarInfo();
-            renderInventory();
-            alert(`🎁 ${title} başarıyla satın alındı ve Kişisel Deponuza eklendi!`);
-        }
-
-        function renderInventory() {
-            const container = document.getElementById('envanterContainer');
-            container.innerHTML = "";
-            
-            if(!currentUser || !currentUser.inventory || currentUser.inventory.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color:var(--gray); font-style: italic; font-size:12px; padding:10px;" id="emptyInventoryText">Envanteriniz şu anda boş.</div>`;
-                return;
-            }
-
-            currentUser.inventory.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "envanter-card";
-                card.innerHTML = `
-                    <div class="card-icon">${item.icon}</div>
-                    <h5>${item.title}</h5>
-                    <button class="btn-inv" onclick="useInventoryItem(${item.id})">${item.type === 'chest' ? 'Aç' : 'Aktif Et'}</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function useInventoryItem(id) {
-            const itemIndex = currentUser.inventory.findIndex(i => i.id === id);
-            if(itemIndex === -1) return;
-            const item = currentUser.inventory[itemIndex];
-
-            currentUser.inventory.splice(itemIndex, 1); // Envanterden çıkar
-
-            if(item.type === 'chest') {
-                // Sandık Açma Algoritması (Rastgele kupon verir)
-                const rewards = [
-                    { title: "Spotify Premium (1 Aylık)", icon: "🎵" },
-                    { title: "ChatGPT Plus Üyeliği", icon: "🤖" },
-                    { title: "Netflix Premium", icon: "🎬" }
-                ];
-                const prize = rewards[Math.floor(Math.random() * rewards.length)];
-                if(!currentUser.inventory) currentUser.inventory = [];
-                currentUser.inventory.push({ id: Date.now(), title: prize.title, icon: prize.icon, type: 'coupon' });
-                alert(`📦 Sandıktan Çıkan Ödül: ${prize.icon} ${prize.title}! Kupon envanterinize yüklendi.`);
-            } else {
-                // Kuponu aktifleştirme ve premium panelinde gösterme
-                if(!currentUser.activeSubs) currentUser.activeSubs = [];
-                currentUser.activeSubs.push({ title: item.title, icon: item.icon });
-                alert(`⚡ ${item.title} üyeliğiniz başarıyla aktif edildi! Lisans anahtarınız profilinize tanımlandı.`);
-            }
-
-            updateUserInStorage();
-            renderInventory();
-            renderActiveSubs();
-        }
-
-        function renderActiveSubs() {
-            const container = document.getElementById('activeSubsContainer');
-            container.innerHTML = "";
-            
-            if(!currentUser || !currentUser.activeSubs || currentUser.activeSubs.length === 0) {
-                container.innerHTML = `<span style="color:var(--gray); font-size:11px; font-style:italic;" id="emptySubText">Envanterinizden aktifleştirilmiş kupon bulunmamaktadır.</span>`;
-                return;
-            }
-
-            currentUser.activeSubs.forEach(sub => {
-                const badge = document.createElement('span');
-                badge.className = "sub-badge";
-                badge.innerHTML = `${sub.icon} ${sub.title}`;
-                container.appendChild(badge);
-            });
-        }
-
-        // Hesap Değiştirme ve Güvenli Çıkış
-        function openSwitchAccountModal() {
-            document.getElementById('switchAccountModal').style.display = 'flex';
-            const container = document.getElementById('accountListContainer');
-            container.innerHTML = "";
-
-            if(users.length === 0) {
-                container.innerHTML = "<p style='font-size:12px; color:var(--gray); text-align:center;'>Kayıtlı başka hesap bulunamadı.</p>";
-                return;
-            }
-
-            users.forEach(u => {
-                const item = document.createElement('div');
-                item.className = "account-item";
-                item.onclick = function() {
-                    currentUser = u;
-                    localStorage.setItem('edu_logged_email', u.email);
-                    initDashboard();
-                    closeSwitchAccountModal();
-                };
-                item.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <div>${u.avatar || '🧑‍💻'}</div>
-                        <div style="text-align:left;">
-                            <div style="font-weight:bold; font-size:13px;">${u.name}</div>
-                            <div style="font-size:11px; color:var(--gray);">${u.email}</div>
-                        </div>
-                    </div>
-                    <span style="font-size:11px; background:#cbd5e1; padding:2px 6px; border-radius:6px; font-weight:bold;">${u.role === 'student' ? 'Öğrenci' : 'Yatırımcı'}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function closeSwitchAccountModal() {
-            document.getElementById('switchAccountModal').style.display = 'none';
-        }
-
-        function logout() {
-            localStorage.removeItem('edu_logged_email');
-            currentUser = null;
-            document.getElementById('navbar').style.display = 'none';
-            document.getElementById('projectsTab').classList.remove('active');
-            document.getElementById('investorsTab').classList.remove('active');
-            document.getElementById('aboutTab').classList.remove('active');
-            document.getElementById('authScreen').classList.add('active');
-            switchAuthMode(false); // Giriş yap moduna döndür
-        }
-    </script>
 </body>
 </html>
