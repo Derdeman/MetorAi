@@ -1,1 +1,238 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeşil Meram Yufka & Unlu Mamülleri</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigasyon Linkleri */
+        .navbar-nav .nav-link {
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #198754 !important;
+        }
+
+        /* Giriş (Hero) Bölümü Arka Planı */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=1200&auto=format&fit=crop') no-repeat center center/cover;
+            height: 70vh;
+            min-height: 400px;
+        }
+
+        /* Ürün Kartları Efektleri */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        .product-card img {
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Form Odaklanma Rengi */
+        .form-content:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+        }
+
+        /* Yumuşak Açılış Animasyonu */
+        .animate-fade-in {
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <span class="text-success">Yeşil Meram</span> <span class="text-secondary">Yufka</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto fw-semibold">
+                    <li class="nav-item"><a class="nav-link text-success" href="#home">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">Hakkımızda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">Ürünlerimiz</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#why-us">Neden Biz?</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">İletişim</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section d-flex align-items-center text-center text-white">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3 animate-fade-in">Konya'nın Geleneksel Lezzeti</h1>
+            <p class="lead mb-4 fs-4">Günlük taze yufka, kadayıf and el açması tadında unlu mamüllerle sofralarınıza konuk oluyoruz.</p>
+            <a href="#products" class="btn btn-success btn-lg px-4 py-3 fw-bold shadow">Ürünlerimizi Keşfedin</a>
+        </div>
+    </section>
+
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop" alt="Hakkımızda" class="img-fluid rounded shadow-lg">
+                </div>
+                <div class="col-md-6 ps-md-5">
+                    <h2 class="fw-bold mb-3"><span class="text-success">Gelenekten</span> Geleceğe Lezzet Yolculuğu</h2>
+                    <p class="text-muted lead">Yeşil Meram Yufka olarak, Konya'da uzun yıllardır kaliteden ve hijyenden ödün vermeden üretim yapıyoruz. Annelerimizin el emeği lezzetini, modern tesislerimizde titizlikle harmanlıyoruz.</p>
+                    <p class="text-muted">Her gün en kaliteli unları seçiyor, geleneksel yöntemlerle yoğuruyor ve sofralarınıza en taze haliyle ulaştırıyoruz. Su böreklik yufkamızdan, tel tel dökülen kadayıfımıza kadar her üründe aynı özeni görebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Öne Çıkan <span class="text-success">Ürünlerimiz</span></h2>
+                <p class="text-muted">Her gün taze, her gün lezzetli unlu mamül çeşitlerimiz.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <img src="https://images.unsplash.com/photo-1608686207856-001b95cf60ca?q=80&w=500&auto=format&fit=crop" class="card-img-top" alt="Günlük Taze Yufka">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">Günlük Taze Yufka</h5>
+                            <p class="card-text text-muted">İncecik açılmış, böreklerinizin sırrı olacak günlük taze ve su böreklik yufka çeşitleri.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <img src="https://images.unsplash.com/photo-1519676867240-f03562e64548?q=80&w=500&auto=format&fit=crop" class="card-img-top" alt="Çiğ & Tel Kadayıf">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">Çiğ & Tel Kadayıf</h5>
+                            <p class="card-text text-muted">Çıtır çıtır Konya sarması ve şerbetli tatlılar için tam kıvamında sarılmış tel kadayıf.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?q=80&w=500&auto=format&fit=crop" class="card-img-top" alt="Ev Usulü Mantı & Erişte">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">Ev Usulü Mantı & Erişte</h5>
+                            <p class="card-text text-muted">Geleneksel yöntemlerle kurutulmuş çorbalık erişte ve bol malzemeli enfes mantı.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-us" class="py-5 text-white bg-success">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-white">Neden Yeşil Meram?</h2>
+                <p class="text-white-50">Bizleri Konya'nın lider markası yapan değerlerimiz.</p>
+            </div>
+            <div class="row text-center g-4">
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <i class="fa-solid fa-leaf display-4 mb-3 text-warning"></i>
+                        <h4 class="fw-bold">100% Doğal & Taze</h4>
+                        <p class="text-white-50">Ürünlerimizde hiçbir koruyucu madde kullanmıyor, her gün taze üretim yapıyoruz.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <i class="fa-solid fa-hand-sparkles display-4 mb-3 text-warning"></i>
+                        <h4 class="fw-bold">Hijyenik Üretim</h4>
+                        <p class="text-white-50">Üretim tesislerimizde en üst düzey kalite ve hijyen standartlarını uyguluyoruz.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <i class="fa-solid fa-truck-fast display-4 mb-3 text-warning"></i>
+                        <h4 class="fw-bold">Hızlı Teslimat</h4>
+                        <p class="text-white-50">Konya'daki şubelerimiz ve anlaşmalı yerel market zincirleri ile her zaman yakınınızdayız.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Bize <span class="text-success">Ulaşın</span> & Şubelerimiz</h2>
+                <p class="text-muted">Sipariş, bilgi veya şikayetleriniz için bizimle iletişime geçebilirsiniz.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="bg-light p-4 rounded shadow-sm h-100">
+                        <h4 class="fw-bold text-success mb-4"><i class="fa-solid fa-location-dot me-2"></i>Merkez Şube</h4>
+                        <p class="mb-2"><strong>Adres:</strong> Şafak Caddesi, Selçuklu / KONYA</p>
+                        <p class="mb-2"><strong>Telefon:</strong> +90 (332) XXX XX XX</p>
+                        <p class="mb-4"><strong>E-posta:</strong> info@yesilmeramyufka.com</p>
+                        
+                        <h4 class="fw-bold text-success mb-3"><i class="fa-solid fa-clock me-2"></i>Çalışma Saatleri</h4>
+                        <p class="mb-0">Pazartesi - Cumartesi: 07:00 - 20:00<br>Pazar: 08:00 - 18:00</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <form class="p-4 bg-white rounded shadow-sm border h-100">
+                        <h4 class="fw-bold mb-4">Mesaj Gönderin</h4>
+                        <div class="mb-3">
+                            <label class="form-label">Adınız Soyadınız</label>
+                            <input type="text" class="form-content form-control" placeholder="Örn: Ahmet Yılmaz" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Telefon Numaranız</label>
+                            <input type="tel" class="form-content form-control" placeholder="0555 XXX XX XX" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mesajınız</label>
+                            <textarea class="form-content form-control" rows="4" placeholder="Mesajınızı buraya yazınız..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-bold">Gönder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p class="mb-2">&copy; 2026 Yeşil Meram Yufka. Tüm Hakları Saklıdır.</p>
+            <div class="fs-5">
+                <a href="#" class="text-white me-3"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="text-white me-3"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="text-white"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
